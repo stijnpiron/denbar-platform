@@ -1,0 +1,11 @@
+# dependencies
+/node_modules
+
+# build folder
+/dist
+
+# documentation folder
+/docs
+
+# environment file
+.env

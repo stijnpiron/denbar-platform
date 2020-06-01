@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - lts/*
+script:
+  - npm run lint:commit
+  - npm run test
+branches:
+  only:
+    - master
+deploy:
+  provider: heroku
+  app:
+    master: <<HEROKU_APP_NAME>>
+  api_key:
+    secure: <<HEROKU_API_KEY_GOES_HERE>>
