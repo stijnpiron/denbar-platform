@@ -1,14 +1,15 @@
 import { OK } from 'http-status-codes';
 import express from 'express';
-import ApiService from './api.service';
-import Controller from '../../common/interfaces/controller.interface';
+import { ApiService } from './api.service';
+import { Controller } from '../../common/interfaces/controller.interface';
 
-class ApiController implements Controller {
+export class ApiController extends Controller {
   public path = '/';
   public router = express.Router();
   private apiService = new ApiService();
 
   constructor() {
+    super();
     this.initializeRoutes();
   }
 
@@ -25,5 +26,3 @@ class ApiController implements Controller {
     }
   };
 }
-
-export default ApiController;

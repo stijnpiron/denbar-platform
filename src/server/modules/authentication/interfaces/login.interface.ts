@@ -1,6 +1,6 @@
-import User from '../../user/interfaces/user.interface';
+import { User } from '../../user/interfaces/user.interface';
 
-export default interface Login {
+export interface Login {
   cookie: string;
   user?: User;
   isTwoFactorAuthenticationEnabled?: boolean;

@@ -1,23 +1,24 @@
 import express from 'express';
 import { OK } from 'http-status-codes';
-import AuthenticationService from './authentication.service';
-import authMiddleware from '../../common/middlewares/auth.middleware';
-import Controller from '../../common/interfaces/controller.interface';
-import CreateUserDto from './dtos/create-user.dto';
-import LoginDto from './dtos/login.dto';
-import RequestWithUser from '../../common/interfaces/request-with-user.interface';
-import TwoFactorAuthenticationDto from './dtos/two-factor-authentication.dto';
-import userModel from '../user/models/user.model';
-import validationMiddleware from '../../common/middlewares/validation.middleware';
-import WrongTwoFactorAuthenticationCodeException from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
+import { AuthenticationService } from './authentication.service';
+import { authMiddleware } from '../../common/middlewares/auth.middleware';
+import { Controller } from '../../common/interfaces/controller.interface';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { LoginDto } from './dtos/login.dto';
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
+import { TwoFactorAuthenticationDto } from './dtos/two-factor-authentication.dto';
+import { userModel } from '../user/models/user.model';
+import { validationMiddleware } from '../../common/middlewares/validation.middleware';
+import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
 
-class AuthenticationController implements Controller {
+export class AuthenticationController extends Controller {
   public path = '/auth';
   public router = express.Router();
   private authenticationService = new AuthenticationService();
   private user = userModel;
 
   constructor() {
+    super();
     this.initializeRoutes();
   }
 
@@ -120,5 +121,3 @@ class AuthenticationController implements Controller {
     });
   };
 }
-
-export default AuthenticationController;

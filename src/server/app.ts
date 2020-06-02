@@ -8,11 +8,11 @@ import swaggerUI from 'swagger-ui-express';
 import util from 'util';
 import YAML from 'yaml';
 import { stringContainsElementOfArray, timeDiff } from './common/utils/utils';
-import Controller from './common/interfaces/controller.interface';
-import errorMiddleware from './common/middlewares/error.middleware';
-import loggerMiddleware from './common/middlewares/logger.middleware';
+import { Controller } from './common/interfaces/controller.interface';
+import { errorMiddleware } from './common/middlewares/error.middleware';
+import { loggerMiddleware } from './common/middlewares/logger.middleware';
 
-class App {
+export class App {
   private initializeTime = 0;
   public app: express.Application;
   private basePath = '/api';
@@ -135,5 +135,3 @@ class App {
     this.initializeTime += timeDiff(startTime, endTime);
   }
 }
-
-export default App;

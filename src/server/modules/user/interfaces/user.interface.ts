@@ -1,5 +1,5 @@
 // TODO: Add variations of usermodal (userForRegistor, userForLogin, ...)
-interface User {
+export interface User {
   _id?: string;
   name: string;
   email: string;
@@ -14,5 +14,3 @@ interface Address {
   city: string;
   country: string;
 }
-
-export default User;

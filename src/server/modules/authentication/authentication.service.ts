@@ -4,23 +4,23 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import QRCode from 'qrcode';
 import speakeasy from 'speakeasy';
-import CreateUserDto from './dtos/create-user.dto';
-import DataStoredInToken from '../../common/interfaces/data-stored-in-token.interface';
-import Login from './interfaces/login.interface';
-import LoginDto from './dtos/login.dto';
-import Logout from './interfaces/logout.interface';
-import Register from './interfaces/register.interface';
-import SecondFactorAuthentication from './interfaces/second-factor-authentication.interface';
-import SendExceptionWithPayload from '../../common/exceptions/send-exception-with-payload.exception';
-import TokenData from './interfaces/token-data.interface';
-import TwoFactorAuthenticationCode from './interfaces/two-factor-authentication-code.interface';
-import User from '../user/interfaces/user.interface';
-import userModel from '../user/models/user.model';
-import UserWithThatEmailAlreadyExistsException from '../../common/exceptions/user-with-that-email-already-exists.exception';
-import WrongAuthenticationTokenException from '../../common/exceptions/wrong-authentication-token.exception';
-import WrongCredentialsException from '../../common/exceptions/wrong-credentials.exception';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.interface';
+import { Login } from './interfaces/login.interface';
+import { LoginDto } from './dtos/login.dto';
+import { Logout } from './interfaces/logout.interface';
+import { Register } from './interfaces/register.interface';
+import { SecondFactorAuthentication } from './interfaces/second-factor-authentication.interface';
+import { SendExceptionWithPayload } from '../../common/exceptions/send-exception-with-payload.exception';
+import { TokenData } from './interfaces/token-data.interface';
+import { TwoFactorAuthenticationCode } from './interfaces/two-factor-authentication-code.interface';
+import { User } from '../user/interfaces/user.interface';
+import { userModel } from '../user/models/user.model';
+import { UserWithThatEmailAlreadyExistsException } from '../../common/exceptions/user-with-that-email-already-exists.exception';
+import { WrongAuthenticationTokenException } from '../../common/exceptions/wrong-authentication-token.exception';
+import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
 
-class AuthenticationService {
+export class AuthenticationService {
   private user = userModel;
 
   public register = async (userData: CreateUserDto): Promise<Register> => {
@@ -130,5 +130,3 @@ class AuthenticationService {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }
-
-export default AuthenticationService;

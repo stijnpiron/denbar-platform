@@ -1,14 +1,16 @@
+import { OK } from 'http-status-codes';
 import express from 'express';
-import Controller from '../../common/interfaces/controller.interface';
-import authMiddleware from '../../common/middlewares/auth.middleware';
-import ProductService from './product.service';
+import { Controller } from '../../common/interfaces/controller.interface';
+import { authMiddleware } from '../../common/middlewares/auth.middleware';
+import { ProductService } from './product.service';
 
-class ProductController implements Controller {
+export class ProductController extends Controller {
   public path = '/product';
   public router = express.Router();
   private productService = new ProductService();
 
   constructor() {
+    super();
     this.initializeRoutes();
   }
 
@@ -17,8 +19,11 @@ class ProductController implements Controller {
   }
 
   private getAllProducts = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> => {
-    // TODO: implement getAllProducts
+    try {
+      const products = await this.productService.list();
+      res.status(OK).send(products);
+    } catch (err) {
+      next(err);
+    }
   };
 }
-
-export default ProductController;

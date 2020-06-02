@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import AppInstance from './server';
+import { server } from './server';
 
 describe('Server test', () => {
   let supertest: any = null;
 
   before(async () => {
-    supertest = require('supertest')(AppInstance.getExpressInstance());
+    supertest = require('supertest')(server.getExpressInstance());
   });
 
   it('tests the base route and returns true for status', async () => {

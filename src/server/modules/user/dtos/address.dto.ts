@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-class CreateAddressDto {
+export class CreateAddressDto {
   @IsString()
   public street: string;
   @IsString()
@@ -8,5 +8,3 @@ class CreateAddressDto {
   @IsString()
   public country: string;
 }
-
-export default CreateAddressDto;

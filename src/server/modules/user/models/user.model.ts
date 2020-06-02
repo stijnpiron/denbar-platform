@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from '../interfaces/user.interface';
+import { User } from '../interfaces/user.interface';
 
 const addressSchema = new mongoose.Schema({
   city: String,
@@ -16,6 +16,4 @@ const userSchema = new mongoose.Schema({
   isTwoFactorAuthenticationEnabled: Boolean,
 });
 
-const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
-
-export default userModel;
+export const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
