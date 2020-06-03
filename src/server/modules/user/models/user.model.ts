@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   address: addressSchema,
   email: String,
   name: String,
+  role: { type: String, default: 'user', enum: ['user', 'admin', 'super'] },
   password: { type: String },
   twoFactorAuthenticationCode: String,
   isTwoFactorAuthenticationEnabled: Boolean,

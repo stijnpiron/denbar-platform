@@ -1,3 +1,6 @@
+import { ProductCategory } from '../enums/product-category.enum';
+import { PackingSize } from '../enums/packing-size.enum';
+
 export interface Product extends ProductRequired {
   oldPrices: ProductPrice[];
 }
@@ -64,13 +67,4 @@ interface ProductPrice {
 interface ProductStock {
   inStock: number;
   minStock: number;
-}
-
-enum PackingSize {
-  SMALL = 'small',
-  BIG = 'big',
-}
-
-enum ProductCategory {
-  SODA_SMALL = 'soda_small',
 }

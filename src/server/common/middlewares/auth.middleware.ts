@@ -1,6 +1,6 @@
 import { NextFunction, RequestHandler, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthenticationTokenMissingException } from '../exceptions/authentication-toke-missing.exception';
+import { AuthenticationTokenMissingException } from '../exceptions/authentication-token-missing.exception';
 import { DataStoredInToken } from '../interfaces/data-stored-in-token.interface';
 import { RequestWithUser } from '../interfaces/request-with-user.interface';
 import { userModel } from '../../modules/user/models/user.model';

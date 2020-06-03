@@ -118,6 +118,7 @@ export class AuthenticationService {
     const dataStoredInToken: DataStoredInToken = {
       isSecondFactorAuthenticated,
       _id: user._id,
+      role: user.role,
     };
 
     return {
@@ -129,4 +130,10 @@ export class AuthenticationService {
   public createCookie(tokenData: TokenData = { token: '', expiresIn: 0 }): string {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
+
+  public getRoleForUser = async (userId: string): Promise<string> => {
+    const userData = await this.user.findById(userId).select('role');
+
+    return userData.role;
+  };
 }

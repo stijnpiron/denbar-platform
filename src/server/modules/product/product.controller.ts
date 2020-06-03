@@ -1,3 +1,6 @@
+import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
+import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
+import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
 import { ProductCreateDto, ProductUpdateDto } from './interfaces/product.interface';
 import { OK } from 'http-status-codes';
 import express from 'express';
@@ -18,11 +21,11 @@ export class ProductController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, this.getAllProducts)
-      .get(`${this.path}/:id`, this.getProductById)
-      .post(`${this.path}`, this.createProduct)
-      .delete(`${this.path}/:id`, this.deletePost)
-      .put(`${this.path}/:id`, this.modifyProduct);
+      .get(`${this.path}`, grantAccess(PermissionActions.READANY, PermissionResource.PRODUCT), this.getAllProducts)
+      .get(`${this.path}/:id`, grantAccess(PermissionActions.READANY, PermissionResource.PRODUCT), this.getProductById)
+      .post(`${this.path}`, grantAccess(PermissionActions.CREATEANY, PermissionResource.PRODUCT), this.createProduct)
+      .delete(`${this.path}/:id`, grantAccess(PermissionActions.DELETEANY, PermissionResource.PRODUCT), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(PermissionActions.UPDATEANY, PermissionResource.PRODUCT), this.modifyProduct);
   }
 
   private getAllProducts = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
