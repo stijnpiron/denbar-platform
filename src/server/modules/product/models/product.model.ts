@@ -17,14 +17,17 @@ const productPriceSchema = new mongoose.Schema({
   year: { type: Number },
 });
 
-const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  active: { type: Boolean, default: true },
-  category: { type: String, required: true },
-  packing: { type: productPackingSchema, required: true },
-  stock: { type: productStockSchema },
-  price: { type: productPriceSchema, required: true },
-  oldPrices: [productPriceSchema],
-});
+const productSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    active: { type: Boolean, default: false },
+    category: { type: String, required: true },
+    packing: { type: productPackingSchema, required: true },
+    stock: { type: productStockSchema },
+    price: { type: productPriceSchema },
+    oldPrices: [productPriceSchema],
+  },
+  { timestamps: true }
+);
 
 export const ProductModel = mongoose.model<Product & mongoose.Document>('Product', productSchema);

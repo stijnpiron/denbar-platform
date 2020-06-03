@@ -21,10 +21,10 @@ export class App {
 
   constructor(controllers: Controller[]) {
     this.app = express();
+    this.initializeSwagger();
     this.initializeLogging();
     this.connectToTheDatabase();
     this.initializeMiddlewares();
-    this.initializeSwagger();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
     this.listen();
@@ -39,16 +39,14 @@ export class App {
 
     this.app.listen(process.env.PORT, () => {
       const endTime = new Date();
-      if (process.env.NODE_ENV !== 'test') console.info(`--- server listening (${timeDiff(startTime, endTime)}ms)`);
-      this.initializeTime += timeDiff(startTime, endTime);
-      if (process.env.NODE_ENV !== 'test') console.info(`--- server initialized in ${this.initializeTime}ms`);
-      if (process.env.NODE_ENV !== 'test') console.info(`Server listening on https port ${process.env.PORT}`);
+      if (!process.env.TESTRUN) console.info(`--- server listening (${timeDiff(startTime, endTime)}ms)`);
+      if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
+      if (!process.env.TESTRUN) console.info(`--- server initialized in ${this.initializeTime}ms`);
+      if (!process.env.TESTRUN) console.info(`Server listening on https port ${process.env.PORT}`);
     });
   }
 
   private async initializeLogging(): Promise<void> {
-    console.info(process.env.TESTRUN);
-
     if (!process.env.TESTRUN) {
       const startTime = new Date();
 
@@ -60,7 +58,7 @@ export class App {
                 collection: process.env.LOG_MORGAN,
               },
               {
-                skip: (req: express.Request, _: express.Response) => stringContainsElementOfArray(req.originalUrl, ['/api/swagger']),
+                skip: (req: express.Request, _res: express.Response) => stringContainsElementOfArray(req.originalUrl, ['/api/swagger']),
               },
               ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - \
             :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
@@ -69,8 +67,8 @@ export class App {
       );
       const endTime = new Date();
 
-      if (process.env.NODE_ENV !== 'test') console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
-      this.initializeTime += timeDiff(startTime, endTime);
+      if (!process.env.TESTRUN) console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
+      if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
     }
   }
 
@@ -80,8 +78,8 @@ export class App {
     this.app.use(cookieParser());
     const endTime = new Date();
 
-    if (process.env.NODE_ENV !== 'test') console.info(`--- middlewares up and running (${timeDiff(startTime, endTime)}ms)`);
-    this.initializeTime += timeDiff(startTime, endTime);
+    if (!process.env.TESTRUN) console.info(`--- middlewares up and running (${timeDiff(startTime, endTime)}ms)`);
+    if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
   }
 
   private initializeErrorHandling(): void {
@@ -89,8 +87,8 @@ export class App {
     this.app.use(errorMiddleware);
     const endTime = new Date();
 
-    if (process.env.NODE_ENV !== 'test') console.info(`--- error handling up and running (${timeDiff(startTime, endTime)}ms)`);
-    this.initializeTime += timeDiff(startTime, endTime);
+    if (!process.env.TESTRUN) console.info(`--- error handling up and running (${timeDiff(startTime, endTime)}ms)`);
+    if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
   }
 
   private async initializeSwagger(): Promise<void> {
@@ -103,10 +101,10 @@ export class App {
       this.app.use(`${this.basePath}/swagger`, swaggerUI.serve, swaggerUI.setup(swaggerDocumentation));
       const endTime = new Date();
 
-      if (process.env.NODE_ENV !== 'test') console.info(`--- swagger up and running (${timeDiff(startTime, endTime)}ms)`);
-      this.initializeTime += timeDiff(startTime, endTime);
+      if (!process.env.TESTRUN) console.info(`--- swagger up and running (${timeDiff(startTime, endTime)}ms)`);
+      if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
     } catch (err) {
-      if (process.env.NODE_ENV !== 'test') console.warn('--- unable to generate Swagger documentation', err);
+      if (!process.env.TESTRUN) console.warn('--- unable to generate Swagger documentation', err);
     }
   }
 
@@ -118,8 +116,8 @@ export class App {
     });
     const endTime = new Date();
 
-    if (process.env.NODE_ENV !== 'test') console.info(`--- controllers initialized (${timeDiff(startTime, endTime)}ms)`);
-    this.initializeTime += timeDiff(startTime, endTime);
+    if (!process.env.TESTRUN) console.info(`--- controllers initialized (${timeDiff(startTime, endTime)}ms)`);
+    if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
   }
 
   private connectToTheDatabase(): void {
@@ -131,7 +129,7 @@ export class App {
       useFindAndModify: false,
     });
     const endTime = new Date();
-    if (process.env.NODE_ENV !== 'test') console.info(`--- database connected (${timeDiff(startTime, endTime)}ms)`);
-    this.initializeTime += timeDiff(startTime, endTime);
+    if (!process.env.TESTRUN) console.info(`--- database connected (${timeDiff(startTime, endTime)}ms)`);
+    if (!process.env.TESTRUN) this.initializeTime += timeDiff(startTime, endTime);
   }
 }

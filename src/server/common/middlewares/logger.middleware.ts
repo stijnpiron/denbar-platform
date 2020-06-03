@@ -7,7 +7,7 @@ import { stringContainsElementOfArray } from '../utils/utils';
  *  When there are paths provided in the ignorePaths, requests to these paths will be ignored and not be printed to the console
  * @param {Array.string} ignorePaths Paths to ignore by loggerMiddleware
  */
-export const loggerMiddleware = (ignorePaths?: string[]) => async (req: Request, _: Response, next: NextFunction): Promise<void> => {
+export const loggerMiddleware = (ignorePaths?: string[]) => async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
   if (!ignorePaths || (!stringContainsElementOfArray(req.path, ignorePaths) && process.env.NODE_ENV === 'development'))
     console.info(`${req.method} ${req.path}`);
 

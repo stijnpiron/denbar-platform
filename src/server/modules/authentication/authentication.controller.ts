@@ -63,7 +63,7 @@ export class AuthenticationController extends Controller {
     }
   };
 
-  private loggingOut = async (_: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private loggingOut = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     try {
       const { cookie } = await this.authenticationService.logout();
       res.setHeader('Set-Cookie', cookie);
@@ -73,15 +73,19 @@ export class AuthenticationController extends Controller {
     }
   };
 
-  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response): Promise<void> => {
+  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
     const { user } = req;
 
-    const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
+    try {
+      const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
 
-    await this.user.findByIdAndUpdate(user._id, {
-      twoFactorAuthenticationCode: base32,
-    });
-    this.authenticationService.respondWithQRCode(otpauthUrl, res);
+      await this.user.findByIdAndUpdate(user._id, {
+        twoFactorAuthenticationCode: base32,
+      });
+      this.authenticationService.respondWithQRCode(otpauthUrl, res);
+    } catch (err) {
+      next(err);
+    }
   };
 
   private toggleTwoFactorAuthentication = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {

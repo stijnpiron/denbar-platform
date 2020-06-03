@@ -1,8 +1,9 @@
+import { Response } from './response-object.interface';
+
 export interface CRUD {
-  list: (limit?: number, page?: number) => any;
-  create: (resource: any) => string;
-  updateById: (resourceId: any) => string;
-  readById: (resourceId: any) => any;
-  deleteById: (resourceId: any) => string;
-  patchById: (resourceId: any) => string;
+  list: (limit?: number, page?: number) => Promise<Response>;
+  create: (resource: any) => Promise<Response>;
+  updateById: (id: any, resource: any) => Promise<Response>;
+  getById: (id: any) => Promise<Response>;
+  deleteById: (id: any) => Promise<Response>;
 }

@@ -5,7 +5,7 @@ import express from 'express';
 import { HttpException } from '../exceptions/http.exception';
 
 export function validationMiddleware<T>(type: any, skipMissingProperties = false): express.RequestHandler {
-  return (req, _, next): void => {
+  return (req: express.Request, _res: express.Response, next: express.NextFunction): void => {
     validate(plainToClass(type, req.body), { skipMissingProperties }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const message = errors.map((error: ValidationError) => Object.values(error.constraints)).join(', ');

@@ -7,7 +7,7 @@ import { userModel } from '../../modules/user/models/user.model';
 import { WrongAuthenticationTokenException } from '../exceptions/wrong-authentication-token.exception';
 
 export function authMiddleware(omitSecondFactor = false): RequestHandler {
-  return async (req: RequestWithUser, _: Response, next: NextFunction): Promise<void> => {
+  return async (req: RequestWithUser, _res: Response, next: NextFunction): Promise<void> => {
     const { cookies } = req;
 
     if (cookies && cookies.Authorization) {

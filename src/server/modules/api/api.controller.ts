@@ -17,7 +17,7 @@ export class ApiController extends Controller {
     this.router.get(this.path, this.catchAll);
   }
 
-  private catchAll = async (_: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private catchAll = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     try {
       const response = this.apiService.catchAll();
       res.status(OK).send(response);
