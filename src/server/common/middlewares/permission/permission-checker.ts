@@ -16,7 +16,7 @@ export const permissionChecker = async (
   if (permissions[resource][action].granted.filter((r: string) => r === role).length === 0) return false;
 
   // check if action needs further check
-  if (action.includes('own') && permissions[resource][action].check && permissions[resource][action].check.includes(role)) {
+  if (action.includes('own') && permissions[resource][action].check?.includes(role)) {
     // go find a resource with matching id and userId as createdBy
     if (
       !(await mongoose.connection.db
