@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { AuthenticationTokenMissingException } from '../exceptions/authentication-token-missing.exception';
 import { DataStoredInToken } from '../interfaces/data-stored-in-token.interface';
 import { RequestWithUser } from '../interfaces/request-with-user.interface';
-import { userModel } from '../../modules/user/models/user.model';
+import { userModel } from '../../api/modules/user/models/user.model';
 import { WrongAuthenticationTokenException } from '../exceptions/wrong-authentication-token.exception';
 
 export function authMiddleware(omitSecondFactor = false): RequestHandler {
