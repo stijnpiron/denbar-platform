@@ -1,5 +1,5 @@
 import { NOT_FOUND } from 'http-status-codes';
-import { HttpException } from './http.exception';
+import { HttpException } from '../../../common/exceptions/http.exception';
 
 export class ProductNotFoundException extends HttpException {
   constructor(id: string) {

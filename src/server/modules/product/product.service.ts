@@ -1,22 +1,20 @@
-import { ProductDeleteResponse } from './interfaces/product-delete.response.interface';
-import { ProductGetResponse } from './interfaces/product-get.response.interface';
-import { ProductUpdateResponse } from './interfaces/product-update.response.interface';
+import { ProductDeleteResponse } from './interfaces/responses/product-delete.response.interface';
+import { ProductGetResponse } from './interfaces/responses/product-get.response.interface';
+import { ProductUpdateResponse } from './interfaces/responses/product-update.response.interface';
 import { INTERNAL_SERVER_ERROR, OK } from 'http-status-codes';
 import { ServerErrorException } from './../../common/exceptions/server-error.exception';
 import { ProductModel } from './models/product.model';
-import {
-  ProductCreateDto,
-  ProductCreateResponseDto,
-  ProductDeleteResponseDto,
-  ProductGetResponseDto,
-  ProductUpdateDto,
-  ProductUpdateResponseDto,
-} from './interfaces/product.interface';
 import { ServiceUnavailableException } from '../../common/exceptions/service-unavailable.exception';
 import { CRUD } from '../../common/interfaces/crud.interface';
-import { ProductListResponse } from './interfaces/product-list.response.interface';
-import { ProductNotFoundException } from '../../common/exceptions/product-not-found.exception';
-import { ProductCreateResponse } from './interfaces/product-create.response.interface';
+import { ProductListResponse } from './interfaces/responses/product-list.response.interface';
+import { ProductNotFoundException } from './exceptions/product-not-found.exception';
+import { ProductCreateResponse } from './interfaces/responses/product-create.response.interface';
+import { ProductCreateRequestDto } from './dtos/requests/product-create.request.dto';
+import { ProductCreateResponseDto } from './dtos/responses/product-create.response.dto';
+import { ProductUpdateRequestDto } from './dtos/requests/product-update.request.dto';
+import { ProductUpdateResponseDto } from './dtos/responses/product-update.response.dto';
+import { ProductGetResponseDto } from './dtos/responses/product-get.response.dto';
+import { ProductDeleteResponseDto } from './dtos/responses/product-delete.response.dto';
 
 export class ProductService implements CRUD {
   private product = ProductModel;
@@ -37,7 +35,7 @@ export class ProductService implements CRUD {
     throw new ServiceUnavailableException('MongoDB');
   };
 
-  public create = async (productData: ProductCreateDto, userId: string): Promise<ProductCreateResponse> => {
+  public create = async (productData: ProductCreateRequestDto, userId: string): Promise<ProductCreateResponse> => {
     const createdProduct = new this.product({
       ...productData,
       createdBy: userId,
@@ -56,7 +54,7 @@ export class ProductService implements CRUD {
     throw new ServerErrorException('Error saving new product');
   };
 
-  public updateById = async (id: string, productData: ProductUpdateDto): Promise<ProductUpdateResponse> => {
+  public updateById = async (id: string, productData: ProductUpdateRequestDto): Promise<ProductUpdateResponse> => {
     const savedProduct = (await this.product.findByIdAndUpdate(id, productData, { new: true })) as ProductUpdateResponseDto;
 
     const response: ProductUpdateResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while updating product with id ${id}` };

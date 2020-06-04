@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   address: addressSchema,
   email: String,
   name: String,
+  group: {
+    ref: 'Group',
+    type: mongoose.Schema.Types.ObjectId,
+  },
   role: { type: String, default: 'user', enum: ['user', 'admin', 'super'] },
   password: { type: String },
   twoFactorAuthenticationCode: String,
