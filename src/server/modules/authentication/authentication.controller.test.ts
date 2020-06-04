@@ -1,14 +1,14 @@
 import { expect } from 'chai';
-import AppInstance from '../../server';
-import User from '../user/interfaces/user.interface';
-import userModel from '../user/models/user.model';
+import { server } from '../../server';
+import { User } from '../user/interfaces/user.interface';
+import { userModel } from '../user/models/user.model';
 
 describe('Authentication Controller tests', () => {
   let supertest: any = null;
   let testUser: User = null;
 
   before(async () => {
-    supertest = require('supertest')(AppInstance.getExpressInstance());
+    supertest = require('supertest')(server.getExpressInstance());
   });
 
   after(async () => {

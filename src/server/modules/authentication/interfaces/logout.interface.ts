@@ -1,3 +1,3 @@
-export default interface Logout {
+export interface Logout {
   cookie: string;
 }

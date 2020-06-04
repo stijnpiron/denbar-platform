@@ -1,8 +1,6 @@
 import { IsString } from 'class-validator';
 
-class TwoFactorAuthenticationDto {
+export class TwoFactorAuthenticationDto {
   @IsString()
   public twoFactorAuthenticationCode: string;
 }
-
-export default TwoFactorAuthenticationDto;

@@ -1,6 +1,5 @@
-interface DataStoredInToken {
+export interface DataStoredInToken {
   _id: string;
+  role: string;
   isSecondFactorAuthenticated: boolean;
 }
-
-export default DataStoredInToken;

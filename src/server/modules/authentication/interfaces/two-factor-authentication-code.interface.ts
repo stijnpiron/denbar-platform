@@ -1,4 +1,4 @@
-export default interface TwoFactorAuthenticationCode {
+export interface TwoFactorAuthenticationCode {
   otpauthUrl: string;
   base32: string;
 }

@@ -1,3 +1,3 @@
-export default interface CatchAll {
+export interface CatchAll {
   message: string;
 }

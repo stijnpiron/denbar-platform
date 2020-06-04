@@ -1,13 +1,13 @@
 import { NextFunction, RequestHandler, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import AuthenticationTokenMissingException from '../exceptions/authentication-toke-missing.exception';
-import DataStoredInToken from '../interfaces/data-stored-in-token.interface';
-import RequestWithUser from '../interfaces/request-with-user.interface';
-import userModel from '../../modules/user/models/user.model';
-import WrongAuthenticationTokenException from '../exceptions/wrong-authentication-token.exception';
+import { AuthenticationTokenMissingException } from '../exceptions/authentication-token-missing.exception';
+import { DataStoredInToken } from '../interfaces/data-stored-in-token.interface';
+import { RequestWithUser } from '../interfaces/request-with-user.interface';
+import { userModel } from '../../modules/user/models/user.model';
+import { WrongAuthenticationTokenException } from '../exceptions/wrong-authentication-token.exception';
 
-function authMiddleware(omitSecondFactor = false): RequestHandler {
-  return async (req: RequestWithUser, _: Response, next: NextFunction): Promise<void> => {
+export function authMiddleware(omitSecondFactor = false): RequestHandler {
+  return async (req: RequestWithUser, _res: Response, next: NextFunction): Promise<void> => {
     const { cookies } = req;
 
     if (cookies && cookies.Authorization) {
@@ -34,5 +34,3 @@ function authMiddleware(omitSecondFactor = false): RequestHandler {
     }
   };
 }
-
-export default authMiddleware;

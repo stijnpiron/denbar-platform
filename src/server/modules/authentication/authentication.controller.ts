@@ -1,23 +1,24 @@
 import express from 'express';
 import { OK } from 'http-status-codes';
-import AuthenticationService from './authentication.service';
-import authMiddleware from '../../common/middlewares/auth.middleware';
-import Controller from '../../common/interfaces/controller.interface';
-import CreateUserDto from './dtos/create-user.dto';
-import LoginDto from './dtos/login.dto';
-import RequestWithUser from '../../common/interfaces/request-with-user.interface';
-import TwoFactorAuthenticationDto from './dtos/two-factor-authentication.dto';
-import userModel from '../user/models/user.model';
-import validationMiddleware from '../../common/middlewares/validation.middleware';
-import WrongTwoFactorAuthenticationCodeException from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
+import { AuthenticationService } from './authentication.service';
+import { authMiddleware } from '../../common/middlewares/auth.middleware';
+import { Controller } from '../../common/interfaces/controller.interface';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { LoginDto } from './dtos/login.dto';
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
+import { TwoFactorAuthenticationDto } from './dtos/two-factor-authentication.dto';
+import { userModel } from '../user/models/user.model';
+import { validationMiddleware } from '../../common/middlewares/validation.middleware';
+import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
 
-class AuthenticationController implements Controller {
+export class AuthenticationController extends Controller {
   public path = '/auth';
   public router = express.Router();
   private authenticationService = new AuthenticationService();
   private user = userModel;
 
   constructor() {
+    super();
     this.initializeRoutes();
   }
 
@@ -62,7 +63,7 @@ class AuthenticationController implements Controller {
     }
   };
 
-  private loggingOut = async (_: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private loggingOut = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     try {
       const { cookie } = await this.authenticationService.logout();
       res.setHeader('Set-Cookie', cookie);
@@ -72,15 +73,19 @@ class AuthenticationController implements Controller {
     }
   };
 
-  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response): Promise<void> => {
+  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
     const { user } = req;
 
-    const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
+    try {
+      const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
 
-    await this.user.findByIdAndUpdate(user._id, {
-      twoFactorAuthenticationCode: base32,
-    });
-    this.authenticationService.respondWithQRCode(otpauthUrl, res);
+      await this.user.findByIdAndUpdate(user._id, {
+        twoFactorAuthenticationCode: base32,
+      });
+      this.authenticationService.respondWithQRCode(otpauthUrl, res);
+    } catch (err) {
+      next(err);
+    }
   };
 
   private toggleTwoFactorAuthentication = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
@@ -120,5 +125,3 @@ class AuthenticationController implements Controller {
     });
   };
 }
-
-export default AuthenticationController;

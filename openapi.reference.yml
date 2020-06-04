@@ -12,17 +12,17 @@ servers:
     variables:
       server:
         enum:
-          - http://localhost:5000
-        description: When running locally, select localhost
-        default: http://localhost:5000
+          - 'http://localhost:5000'
+        description: 'When running locally, select localhost'
+        default: 'http://localhost:5000'
 paths:
-  /post:
+  /products:
     get:
-      summary: getAllPosts
-      tags:
-        - Post
+      summary: getAllProducts
       responses: {}
       operationId: get-posts
+      tags:
+        - Product
     post:
       summary: createPost
       tags:
@@ -30,7 +30,8 @@ paths:
       responses: {}
       operationId: post-posts
       description: ''
-  '/post/{id}':
+    parameters: []
+  '/products/{id}':
     parameters:
       - schema:
           type: string
@@ -38,7 +39,7 @@ paths:
         in: path
         required: true
     get:
-      summary: getPostById
+      summary: getProductById
       tags:
         - Post
       responses: {}
