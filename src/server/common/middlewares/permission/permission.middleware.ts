@@ -1,30 +1,17 @@
 import { RequestWithUser } from './../../interfaces/request-with-user.interface';
 import { ForbiddenException } from '../../exceptions/forbidden.exception';
-import { PermissionActions } from './enums/permission-actions.enum';
-import { PermissionResource } from './enums/permission-resource.enum';
 import { AuthenticationTokenMissingException } from '../../exceptions/authentication-token-missing.exception';
 import { DataStoredInToken } from '../../interfaces/data-stored-in-token.interface';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthenticationService } from '../../../modules/authentication/authentication.service';
-import { compareStrings } from '../../utils/utils';
-
-// TODO: move to separate file to increase maintainability and perhaps in the future ;ove to database
-const permissions: any = {
-  [PermissionResource.PRODUCT]: {
-    [PermissionActions.READANY]: ['user', 'admin', 'super'],
-    [PermissionActions.CREATEANY]: ['admin', 'super'],
-    [PermissionActions.DELETEANY]: ['admin', 'super'],
-    [PermissionActions.UPDATEANY]: ['admin', 'super'],
-  },
-};
-
-const permissionChecker = (role: string, action: string, resource: string): boolean =>
-  permissions[resource][action].filter((r: string) => r === role).length !== 0;
+import { compareStrings } from '../../utils';
+import { permissionChecker } from './permission-checker';
+import { permissions } from './permission.rules';
 
 export const grantAccess = (action: string, resource: string): express.RequestHandler => async (
   req: RequestWithUser,
-  res: express.Response,
+  _res: express.Response,
   next: express.NextFunction
 ): Promise<void> => {
   const authenticationService = new AuthenticationService();
@@ -42,7 +29,12 @@ export const grantAccess = (action: string, resource: string): express.RequestHa
           next(new ForbiddenException("You don't have enough permission to perform this action"));
         }
 
-      const permission = permissionChecker(role, action, resource);
+      const permission = await permissionChecker(role, action, resource, {
+        permissions,
+        resourceId: req.params.id || null,
+        userId: req.user._id,
+        createdByIdField: 'çreatedBy',
+      });
 
       if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
 

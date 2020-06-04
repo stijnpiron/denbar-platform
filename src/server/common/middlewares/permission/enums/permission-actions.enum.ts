@@ -1,6 +1,8 @@
 export enum PermissionActions {
-  READANY = 'readany',
-  CREATEANY = 'createAny',
-  DELETEANY = 'deleteAny',
-  UPDATEANY = 'updateAny',
+  CREATEONE = 'createAny',
+  DELETEONE = 'deleteAny',
+  READALL = 'readany',
+  READONE = 'readone',
+  READOWN = 'readown',
+  UPDATEONE = 'updateAny',
 }

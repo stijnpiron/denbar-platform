@@ -1,3 +1,4 @@
+import { RequestWithUser } from './../../common/interfaces/request-with-user.interface';
 import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
 import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
 import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
@@ -7,6 +8,9 @@ import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
 import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { ProductService } from './product.service';
+
+const { PRODUCTS } = PermissionResource;
+const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
 
 export class ProductController extends Controller {
   public path = '/products';
@@ -21,11 +25,11 @@ export class ProductController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(PermissionActions.READANY, PermissionResource.PRODUCT), this.getAllProducts)
-      .get(`${this.path}/:id`, grantAccess(PermissionActions.READANY, PermissionResource.PRODUCT), this.getProductById)
-      .post(`${this.path}`, grantAccess(PermissionActions.CREATEANY, PermissionResource.PRODUCT), this.createProduct)
-      .delete(`${this.path}/:id`, grantAccess(PermissionActions.DELETEANY, PermissionResource.PRODUCT), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(PermissionActions.UPDATEANY, PermissionResource.PRODUCT), this.modifyProduct);
+      .get(`${this.path}`, grantAccess(READALL, PRODUCTS), this.getAllProducts)
+      .get(`${this.path}/:id`, grantAccess(READOWN, PRODUCTS), this.getProductById)
+      .post(`${this.path}`, grantAccess(CREATEONE, PRODUCTS), this.createProduct)
+      .delete(`${this.path}/:id`, grantAccess(DELETEONE, PRODUCTS), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(UPDATEONE, PRODUCTS), this.modifyProduct);
   }
 
   private getAllProducts = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
@@ -48,11 +52,11 @@ export class ProductController extends Controller {
     }
   };
 
-  private createProduct = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private createProduct = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
     const productData: ProductCreateDto = req.body;
 
     try {
-      const createdProduct = await this.productService.create(productData);
+      const createdProduct = await this.productService.create(productData, req.user._id);
       res.status(OK).send(createdProduct);
     } catch (err) {
       next(err);

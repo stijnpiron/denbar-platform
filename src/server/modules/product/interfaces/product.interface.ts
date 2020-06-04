@@ -1,3 +1,4 @@
+import { Resource } from './../../../common/interfaces/resource.interface';
 import { ProductCategory } from '../enums/product-category.enum';
 import { PackingSize } from '../enums/packing-size.enum';
 
@@ -5,7 +6,7 @@ export interface Product extends ProductRequired {
   oldPrices: ProductPrice[];
 }
 
-interface ProductBasics {
+interface ProductBasics extends Resource {
   name: string;
   active: boolean;
 }
@@ -16,7 +17,6 @@ interface ProductRequired extends ProductOptional {
 }
 
 interface ProductOptional extends ProductBasics {
-  createdAt?: Date;
   lastEdited?: Date;
   category?: ProductCategory;
   packing?: ProductPacking;

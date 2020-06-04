@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 import swaggerUI from 'swagger-ui-express';
 import util from 'util';
 import YAML from 'yaml';
-import { stringContainsElementOfArray, timeDiff } from './common/utils/utils';
+import { stringContainsElementOfArray, timeDiff } from './common/utils';
 import { Controller } from './common/interfaces/controller.interface';
 import { errorMiddleware } from './common/middlewares/error.middleware';
 import { loggerMiddleware } from './common/middlewares/logger.middleware';

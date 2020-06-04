@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema(
     name: { type: String, required: true },
     active: { type: Boolean, default: false },
     category: { type: String, required: true },
+    createdBy: {
+      ref: 'User',
+      type: mongoose.Schema.Types.ObjectId,
+    },
     packing: { type: productPackingSchema, required: true },
     stock: { type: productStockSchema },
     price: { type: productPriceSchema },

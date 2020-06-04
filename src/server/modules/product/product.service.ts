@@ -37,9 +37,10 @@ export class ProductService implements CRUD {
     throw new ServiceUnavailableException('MongoDB');
   };
 
-  public create = async (productData: ProductCreateDto): Promise<ProductCreateResponse> => {
+  public create = async (productData: ProductCreateDto, userId: string): Promise<ProductCreateResponse> => {
     const createdProduct = new this.product({
       ...productData,
+      createdBy: userId,
     });
     const savedProduct = (await createdProduct.save()) as ProductCreateResponseDto;
 

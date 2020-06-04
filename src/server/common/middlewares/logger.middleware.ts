@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { stringContainsElementOfArray } from '../utils/utils';
+import { stringContainsElementOfArray } from '../utils';
 
 /**
  * loggerMiddleware:

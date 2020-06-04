@@ -17,7 +17,7 @@
     "start:debug": "npm run rem-dist && npm run build:ts && node dist/server.js",
     "test": "env TESTRUN=testrun ts-mocha 'src/**/*.test.ts' --recursive",
     "tsc": "tsc",
-    "validate:dev": " npm i && npm run rem-dist && npm run format && npm run lint && npm t && npm run build:ts && npm run rem-dist"
+    "validate:dev": " npm i && npm run rem-dist && npm run format && npm run lint && npm t && npm run rem-dist"
   },
   "repository": {
     "type": "git",
