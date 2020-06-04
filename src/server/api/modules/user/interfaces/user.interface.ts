@@ -1,5 +1,5 @@
 import { PermissionRoles } from '../../../../common/middlewares/permission/enums/permission-roles.enum';
-import { Group } from 'server/api/modules/group/interfaces/group.interface';
+import { Group } from '../../group/interfaces/group.interface';
 
 // TODO: Add variations of usermodel (userForRegister, userForLogin, ...)
 export interface User {

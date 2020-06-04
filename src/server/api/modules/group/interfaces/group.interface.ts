@@ -1,7 +1,7 @@
 import { Year } from '../../year/interfaces/year.interface';
 import { Resource } from '../../../../common/interfaces/resource.interface';
-import { Alliance } from 'server/modules/alliance/interfaces/alliance.interface';
-import { Profile } from 'server/api/modules/profile/interfaces/profile.interface';
+import { Alliance } from '../../alliance/interfaces/alliance.interface';
+import { Profile } from '../../profile/interfaces/profile.interface';
 
 export interface GroupBasics extends Resource {
   year: Year;

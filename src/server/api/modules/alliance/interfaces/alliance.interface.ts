@@ -1,4 +1,4 @@
-import { Resource } from './../../../common/interfaces/resource.interface';
+import { Resource } from './../../../../common/interfaces/resource.interface';
 
 export interface AllianceBasics extends Resource {
   name: string;

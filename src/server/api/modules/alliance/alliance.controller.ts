@@ -1,14 +1,14 @@
 import { OK } from 'http-status-codes';
 import { AllianceService } from './alliance.service';
 import express from 'express';
-import { Controller } from './../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
-import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
-import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
-import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
-import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { AllianceCreateRequestDto } from './dtos/requests/alliance-create.request.dto';
 import { AllianceUpdateRequestDto } from './dtos/requests/alliance-update.request.dto';
+import { PermissionResource } from '../../../common/middlewares/permission/enums/permission-resource.enum';
+import { PermissionActions } from '../../../common/middlewares/permission/enums/permission-actions.enum';
+import { Controller } from '../../../common/interfaces/controller.interface';
+import { authMiddleware } from '../../../common/middlewares/auth.middleware';
+import { grantAccess } from '../../../common/middlewares/permission/permission.middleware';
+import { RequestWithUser } from '../../../common/interfaces/request-with-user.interface';
 
 const { ALLIANCES } = PermissionResource;
 const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
