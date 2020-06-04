@@ -17,7 +17,7 @@ export const grantAccess = (action: string, resource: string): express.RequestHa
   const authenticationService = new AuthenticationService();
   const { cookies } = req;
 
-  if (cookies && cookies.Authorization) {
+  if (cookies.Authorization) {
     const secret = process.env.JWT_SECRET;
 
     try {
