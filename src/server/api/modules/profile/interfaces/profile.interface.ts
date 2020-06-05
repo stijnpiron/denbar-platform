@@ -1,7 +1,11 @@
 import { Resource } from '../../../../common/interfaces/resource.interface';
 
-type ProfileBasics = Resource;
-
-export interface Profile extends ProfileBasics {
+export interface ProfileBasics extends Resource {
   name: string;
 }
+
+export type Profile = ProfileBasics;
+
+export type ProfileOptional = ProfileBasics;
+
+export type ProfileRequired = ProfileOptional;
