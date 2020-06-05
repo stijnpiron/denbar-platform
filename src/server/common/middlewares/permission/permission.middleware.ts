@@ -4,7 +4,7 @@ import { AuthenticationTokenMissingException } from '../../exceptions/authentica
 import { DataStoredInToken } from '../../interfaces/data-stored-in-token.interface';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthenticationService } from '../../../api/common/authentication/authentication.service';
+import { AuthenticationService } from '../../../modules/authentication/authentication.service';
 import { compareStrings } from '../../utils';
 import { permissionChecker } from './permission-checker';
 import { permissions } from './permission.rules';

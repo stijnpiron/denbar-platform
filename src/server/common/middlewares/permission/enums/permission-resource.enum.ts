@@ -1,8 +1,9 @@
 export enum PermissionResource {
-  PRODUCTS = 'products',
-  GROUPS = 'groups',
   ALLIANCES = 'alliances',
-  YEARS = 'years',
+  GROUPS = 'groups',
+  ORDERS = 'orders',
+  PRODUCTS = 'products',
   PROFILES = 'profiles',
   USERS = 'users',
+  YEARS = 'years',
 }
