@@ -6,7 +6,7 @@ import { UserUpdateRequestDto } from './dtos/requests/user-update.request.dto';
 import { UserUpdateResponse } from './interfaces/responses/user-update.response.interface';
 import { UserUpdateResponseDto } from './dtos/responses/user-update.response.dto';
 import { UserNotFoundException } from './exceptions/user-not-found.exception';
-import { UserGetResponse } from './interfaces/responses/User-get.response.interface';
+import { UserGetResponse } from './interfaces/responses/user-get.response.interface';
 import { UserGetResponseDto } from './dtos/responses/user-get.response.dto';
 import { UserModel } from './models/user.model';
 import { UserDeleteResponse } from './interfaces/responses/profile-delete.response.interface';
