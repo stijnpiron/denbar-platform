@@ -1,3 +1,3 @@
-import { YearBasics } from '../../interfaces/year.interface';
+import { YearOptional } from '../../interfaces/year.interface';
 
-export type YearDeleteResponseDto = YearBasics;
+export type YearDeleteResponseDto = YearOptional;

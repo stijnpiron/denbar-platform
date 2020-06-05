@@ -1,10 +1,10 @@
 import { Resource } from '../../../../common/interfaces/resource.interface';
 
-export interface YearBasics extends Resource {
+interface YearBasics extends Resource {
   year: number;
 }
 
-export type Year = YearBasics;
+export type Year = YearRequired;
 
 export type YearOptional = YearBasics;
 

@@ -1,3 +1,3 @@
-import { ProfileBasics } from '../../interfaces/profile.interface';
+import { ProfileOptional } from '../../interfaces/profile.interface';
 
-export type ProfileDeleteResponseDto = ProfileBasics;
+export type ProfileDeleteResponseDto = ProfileOptional;

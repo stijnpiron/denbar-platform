@@ -1,3 +1,3 @@
-import { AllianceBasics } from './../../interfaces/alliance.interface';
+import { AllianceRequired } from './../../interfaces/alliance.interface';
 
-export type AllianceCreateRequestDto = AllianceBasics;
+export type AllianceCreateRequestDto = AllianceRequired;

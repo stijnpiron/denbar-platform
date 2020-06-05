@@ -1,3 +1,3 @@
-import { AllianceBasics } from '../../interfaces/alliance.interface';
+import { AllianceOptional } from '../../interfaces/alliance.interface';
 
-export type AllianceDeleteResponseDto = AllianceBasics;
+export type AllianceDeleteResponseDto = AllianceOptional;

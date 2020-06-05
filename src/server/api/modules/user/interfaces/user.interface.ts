@@ -1,12 +1,26 @@
+import { UserTypes } from './../enums/user-types.enum';
 import { PermissionRoles } from '../../../../common/middlewares/permission/enums/permission-roles.enum';
 import { Group } from '../../group/interfaces/group.interface';
+import { Resource } from 'server/common/interfaces/resource.interface';
 
 // TODO: Add variations of usermodel (userForRegister, userForLogin, ...)
-export interface User {
+
+interface Address {
+  street: string;
+  city: string;
+  country: string;
+}
+
+interface UserBasics extends Resource {
   _id?: string;
   name: string;
   email: string;
   password: string;
+}
+
+export type User = UserRequired;
+
+export interface UserOptional extends UserBasics {
   group?: Group;
   year?: number;
   period?: string;
@@ -14,10 +28,7 @@ export interface User {
   twoFactorAuthenticationCode?: string;
   isTwoFactorAuthenticationEnabled?: boolean;
   address?: Address;
+  type?: UserTypes;
 }
 
-interface Address {
-  street: string;
-  city: string;
-  country: string;
-}
+export type UserRequired = UserOptional;

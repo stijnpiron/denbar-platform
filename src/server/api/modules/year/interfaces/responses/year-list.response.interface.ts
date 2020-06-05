@@ -3,7 +3,7 @@ import { YearResponseDto } from '../../dtos/responses/year-response.dto';
 
 export interface YearListResponse extends Response {
   data?: {
-    groupQuantity: number;
-    groups: YearResponseDto[];
+    yearQuantity: number;
+    years: YearResponseDto[];
   };
 }

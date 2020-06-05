@@ -17,17 +17,17 @@ import { YearDeleteResponse } from './interfaces/responses/year-delete.response.
 import { YearDeleteResponseDto } from './dtos/responses/year-delete.response.dto';
 
 export class YearService implements CRUD {
-  private group = YearModel;
+  private year = YearModel;
 
   public list = async (limit?: number, page?: number): Promise<YearListResponse> => {
-    const groups = await this.group.find();
+    const years = await this.year.find();
 
-    const response: YearListResponse = { statusCode: INTERNAL_SERVER_ERROR, message: 'Error occured when getting a list of groups', data: null };
+    const response: YearListResponse = { statusCode: INTERNAL_SERVER_ERROR, message: 'Error occured when getting a list of years', data: null };
 
-    if (groups) {
+    if (years) {
       response.statusCode = OK;
-      response.message = 'Get group list success';
-      response.data = { groups, groupQuantity: groups.length };
+      response.message = 'Get year list success';
+      response.data = { years, yearQuantity: years.length };
 
       return response;
     }
@@ -35,14 +35,14 @@ export class YearService implements CRUD {
     throw new ServiceUnavailableException('MongoDB');
   };
 
-  public create = async (groupData: YearCreateRequestDto, userId: string): Promise<YearCreateResponse> => {
-    const createdYear = new this.group({
-      ...groupData,
+  public create = async (yearData: YearCreateRequestDto, userId: string): Promise<YearCreateResponse> => {
+    const createdYear = new this.year({
+      ...yearData,
       createdBy: userId,
     });
     const savedYear = (await createdYear.save()) as YearCreateResponseDto;
 
-    const response: YearCreateResponse = { statusCode: INTERNAL_SERVER_ERROR, message: 'Error occured when creating a new groups', data: null };
+    const response: YearCreateResponse = { statusCode: INTERNAL_SERVER_ERROR, message: 'Error occured when creating a new years', data: null };
 
     if (savedYear) {
       response.statusCode = OK;
@@ -51,13 +51,13 @@ export class YearService implements CRUD {
 
       return response;
     }
-    throw new ServerErrorException('Error saving new group');
+    throw new ServerErrorException('Error saving new year');
   };
 
-  public updateById = async (id: string, groupData: YearUpdateRequestDto): Promise<YearUpdateResponse> => {
-    const savedYear = (await this.group.findByIdAndUpdate(id, groupData, { new: true })) as YearUpdateResponseDto;
+  public updateById = async (id: string, yearData: YearUpdateRequestDto): Promise<YearUpdateResponse> => {
+    const savedYear = (await this.year.findByIdAndUpdate(id, yearData, { new: true })) as YearUpdateResponseDto;
 
-    const response: YearUpdateResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while updating group with id ${id}` };
+    const response: YearUpdateResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while updating year with id ${id}` };
 
     if (savedYear) {
       response.statusCode = OK;
@@ -70,14 +70,14 @@ export class YearService implements CRUD {
   };
 
   public getById = async (id: string): Promise<YearGetResponse> => {
-    const group = (await this.group.findById(id)) as YearGetResponseDto;
+    const year = (await this.year.findById(id)) as YearGetResponseDto;
 
-    const response: YearGetResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while getting group with id ${id}` };
+    const response: YearGetResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while getting year with id ${id}` };
 
-    if (group) {
+    if (year) {
       response.statusCode = OK;
-      response.message = 'Get group success';
-      response.data = group;
+      response.message = 'Get year success';
+      response.data = year;
 
       return response;
     }
@@ -85,9 +85,9 @@ export class YearService implements CRUD {
   };
 
   public deleteById = async (id: string): Promise<YearDeleteResponse> => {
-    const deleteResponse = (await this.group.findByIdAndDelete(id)) as YearDeleteResponseDto;
+    const deleteResponse = (await this.year.findByIdAndDelete(id)) as YearDeleteResponseDto;
 
-    const response: YearDeleteResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while deleting group with id ${id}` };
+    const response: YearDeleteResponse = { statusCode: INTERNAL_SERVER_ERROR, message: `Error occured while deleting year with id ${id}` };
 
     if (deleteResponse) {
       response.statusCode = OK;

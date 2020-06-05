@@ -1,3 +1,3 @@
-import { ProfileBasics } from '../../interfaces/profile.interface';
+import { ProfileRequired } from '../../interfaces/profile.interface';
 
-export type ProfileCreateRequestDto = ProfileBasics;
+export type ProfileCreateRequestDto = ProfileRequired;

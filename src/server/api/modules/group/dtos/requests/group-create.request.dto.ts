@@ -1,3 +1,3 @@
-import { GroupBasics } from '../../interfaces/group.interface';
+import { GroupRequired } from '../../interfaces/group.interface';
 
-export type GroupCreateRequestDto = GroupBasics;
+export type GroupCreateRequestDto = GroupRequired;

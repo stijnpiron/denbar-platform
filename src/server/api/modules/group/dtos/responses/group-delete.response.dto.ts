@@ -1,3 +1,3 @@
-import { GroupBasics } from '../../interfaces/group.interface';
+import { GroupOptional } from '../../interfaces/group.interface';
 
-export type GroupDeleteResponseDto = GroupBasics;
+export type GroupDeleteResponseDto = GroupOptional;

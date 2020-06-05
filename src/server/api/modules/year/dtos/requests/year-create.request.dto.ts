@@ -1,3 +1,3 @@
-import { YearBasics } from '../../interfaces/year.interface';
+import { YearRequired } from '../../interfaces/year.interface';
 
-export type YearCreateRequestDto = YearBasics;
+export type YearCreateRequestDto = YearRequired;

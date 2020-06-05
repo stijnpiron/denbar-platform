@@ -4,4 +4,5 @@ export enum PermissionResource {
   ALLIANCES = 'alliances',
   YEARS = 'years',
   PROFILES = 'profiles',
+  USERS = 'users',
 }

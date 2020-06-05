@@ -3,14 +3,14 @@ import { Resource } from '../../../../common/interfaces/resource.interface';
 import { Alliance } from '../../alliance/interfaces/alliance.interface';
 import { Profile } from '../../profile/interfaces/profile.interface';
 
-export interface GroupBasics extends Resource {
+interface GroupBasics extends Resource {
   year: Year;
   alliance: Alliance;
   name: string;
   profile: Profile;
 }
 
-export type Group = GroupBasics;
+export type Group = GroupRequired;
 
 export type GroupOptional = GroupBasics;
 

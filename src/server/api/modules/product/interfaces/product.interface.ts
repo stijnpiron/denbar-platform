@@ -8,7 +8,7 @@ export interface Product extends ProductRequired {
   oldPrices: ProductPrice[];
 }
 
-export interface ProductBasics extends Resource {
+interface ProductBasics extends Resource {
   name: string;
   active: boolean;
 }

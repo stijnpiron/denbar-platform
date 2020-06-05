@@ -1,10 +1,10 @@
 import { Resource } from './../../../../common/interfaces/resource.interface';
 
-export interface AllianceBasics extends Resource {
+interface AllianceBasics extends Resource {
   name: string;
 }
 
-export type Alliance = AllianceBasics;
+export type Alliance = AllianceRequired;
 
 export type AllianceOptional = AllianceBasics;
 
