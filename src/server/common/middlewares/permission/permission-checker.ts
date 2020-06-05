@@ -1,3 +1,4 @@
+import { PermissionRoles } from './enums/permission-roles.enum';
 import mongoose from 'mongoose';
 import { PermissionRules } from './interfaces/permission-rules.interface';
 
@@ -16,7 +17,7 @@ export const permissionChecker = async (
   if (permissions[resource][action].granted.filter((r: string) => r === role).length === 0) return false;
 
   // go find a resource with matching id and userId as createdBy
-  if (action.includes('own') && permissions[resource][action].check?.includes(role))
+  if (action.includes('own') && permissions[resource][action].check?.includes(role as PermissionRoles))
     if (
       !(await mongoose.connection.db
         .collection(resource)

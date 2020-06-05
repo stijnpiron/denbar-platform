@@ -11,7 +11,7 @@ import { GroupCreateRequestDto } from './dtos/requests/group-create.request.dto'
 import { GroupUpdateRequestDto } from './dtos/requests/group-update.request.dto';
 
 const { GROUPS } = PermissionResource;
-const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
+const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class GroupController extends Controller {
   public path = '/groups';
@@ -26,11 +26,11 @@ export class GroupController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, GROUPS), this.getAllGroups)
-      .get(`${this.path}/:id`, grantAccess(READOWN, GROUPS), this.getGroupById)
-      .post(`${this.path}`, grantAccess(CREATEONE, GROUPS), this.createGroup)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, GROUPS), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, GROUPS), this.modifyGroup);
+      .get(`${this.path}`, grantAccess(READ_ALL, GROUPS), this.getAllGroups)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, GROUPS), this.getGroupById)
+      .post(`${this.path}`, grantAccess(CREATE_ONE, GROUPS), this.createGroup)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, GROUPS), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, GROUPS), this.modifyGroup);
   }
 
   private getAllGroups = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

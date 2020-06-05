@@ -10,8 +10,8 @@ import { PeriodService } from './period.service';
 import { PeriodCreateRequestDto } from './dtos/requests/period-create.request.dto';
 import { PeriodUpdateRequestDto } from './dtos/requests/period-update.request.dto';
 
-const { PRODUCTS } = PermissionResource;
-const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
+const { PERIODS } = PermissionResource;
+const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class PeriodController extends Controller {
   public path = '/periods';
@@ -26,11 +26,11 @@ export class PeriodController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, PRODUCTS), this.getAllPeriods)
-      .get(`${this.path}/:id`, grantAccess(READOWN, PRODUCTS), this.getPeriodById)
-      .post(`${this.path}`, grantAccess(CREATEONE, PRODUCTS), this.createPeriod)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, PRODUCTS), this.deletePeriod)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, PRODUCTS), this.modifyPeriod);
+      .get(`${this.path}`, grantAccess(READ_ALL, PERIODS), this.getAllPeriods)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, PERIODS), this.getPeriodById)
+      .post(`${this.path}`, grantAccess(CREATE_ONE, PERIODS), this.createPeriod)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PERIODS), this.deletePeriod)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PERIODS), this.modifyPeriod);
   }
 
   private getAllPeriods = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

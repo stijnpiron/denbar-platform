@@ -11,7 +11,7 @@ import { grantAccess } from '../../common/middlewares/permission/permission.midd
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 
 const { ALLIANCES } = PermissionResource;
-const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
+const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class AllianceController extends Controller {
   public path = '/alliances';
@@ -26,11 +26,11 @@ export class AllianceController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, ALLIANCES), this.getAllAlliances)
-      .get(`${this.path}/:id`, grantAccess(READOWN, ALLIANCES), this.getAllianceById)
-      .post(`${this.path}`, grantAccess(CREATEONE, ALLIANCES), this.createAlliance)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, ALLIANCES), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, ALLIANCES), this.modifyAlliance);
+      .get(`${this.path}`, grantAccess(READ_ALL, ALLIANCES), this.getAllAlliances)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, ALLIANCES), this.getAllianceById)
+      .post(`${this.path}`, grantAccess(CREATE_ONE, ALLIANCES), this.createAlliance)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, ALLIANCES), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, ALLIANCES), this.modifyAlliance);
   }
 
   private getAllAlliances = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

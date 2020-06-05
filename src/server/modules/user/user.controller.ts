@@ -9,7 +9,7 @@ import { PermissionActions } from '../../common/middlewares/permission/enums/per
 import { UserUpdateRequestDto } from './dtos/requests/user-update.request.dto';
 
 const { USERS } = PermissionResource;
-const { READALL, READOWN, DELETEONE, UPDATEONE } = PermissionActions;
+const { READ_ALL, READ_OWN, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class UserController extends Controller {
   public path = '/users';
@@ -24,10 +24,10 @@ export class UserController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, USERS), this.getAllUsers)
-      .get(`${this.path}/:id`, grantAccess(READOWN, USERS), this.getUserById)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, USERS), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, USERS), this.modifyUser);
+      .get(`${this.path}`, grantAccess(READ_ALL, USERS), this.getAllUsers)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, USERS), this.getUserById)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, USERS), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, USERS), this.modifyUser);
   }
 
   private getAllUsers = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

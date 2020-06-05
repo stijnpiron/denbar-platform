@@ -11,7 +11,7 @@ import { ProfileCreateRequestDto } from './dtos/requests/profile-create.request.
 import { ProfileUpdateRequestDto } from './dtos/requests/profile-update.request.dto';
 
 const { PROFILES } = PermissionResource;
-const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
+const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class ProfileController extends Controller {
   public path = '/profiles';
@@ -26,11 +26,11 @@ export class ProfileController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, PROFILES), this.getAllProfiles)
-      .get(`${this.path}/:id`, grantAccess(READOWN, PROFILES), this.getProfileById)
-      .post(`${this.path}`, grantAccess(CREATEONE, PROFILES), this.createProfile)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, PROFILES), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, PROFILES), this.modifyProfile);
+      .get(`${this.path}`, grantAccess(READ_ALL, PROFILES), this.getAllProfiles)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, PROFILES), this.getProfileById)
+      .post(`${this.path}`, grantAccess(CREATE_ONE, PROFILES), this.createProfile)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PROFILES), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PROFILES), this.modifyProfile);
   }
 
   private getAllProfiles = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

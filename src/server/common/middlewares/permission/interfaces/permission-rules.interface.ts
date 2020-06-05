@@ -1,8 +1,10 @@
+import { PermissionRoles } from './../enums/permission-roles.enum';
+
 export interface PermissionRules {
-  [key: string]: {
-    [key: string]: {
-      granted: string[];
-      check?: string[];
+  [PermissionResource: string]: {
+    [PermissionActions: string]: {
+      granted: PermissionRoles[];
+      check?: PermissionRoles[];
     };
   };
 }
