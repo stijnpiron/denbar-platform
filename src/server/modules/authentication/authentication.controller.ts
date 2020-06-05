@@ -1,21 +1,21 @@
 import express from 'express';
 import { OK } from 'http-status-codes';
 import { AuthenticationService } from './authentication.service';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
-import { Controller } from '../../common/interfaces/controller.interface';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
 import { LoginDto } from './dtos/login.dto';
-import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { TwoFactorAuthenticationDto } from './dtos/two-factor-authentication.dto';
-import { userModel } from '../user/models/user.model';
+import { UserModel } from '../../modules/user/models/user.model';
+import { Controller } from '../../common/interfaces/controller.interface';
 import { validationMiddleware } from '../../common/middlewares/validation.middleware';
+import { authMiddleware } from '../../common/middlewares/auth.middleware';
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
 
 export class AuthenticationController extends Controller {
   public path = '/auth';
   public router = express.Router();
   private authenticationService = new AuthenticationService();
-  private user = userModel;
+  private user = UserModel;
 
   constructor() {
     super();
@@ -23,7 +23,7 @@ export class AuthenticationController extends Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
+    this.router.post(`${this.path}/register`, validationMiddleware(UserCreateRequestDto), this.registration);
 
     this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), this.loggingIn);
     this.router.post(`${this.path}/logout`, this.loggingOut);
@@ -38,7 +38,7 @@ export class AuthenticationController extends Controller {
   }
 
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
-    const userData: CreateUserDto = req.body;
+    const userData: UserCreateRequestDto = req.body;
 
     try {
       const { cookie, user } = await this.authenticationService.register(userData);

@@ -1,16 +1,17 @@
-import { RequestWithUser } from './../../common/interfaces/request-with-user.interface';
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
 import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
 import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
-import { ProductCreateDto, ProductUpdateDto } from './interfaces/product.interface';
 import { OK } from 'http-status-codes';
 import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
 import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { ProductService } from './product.service';
+import { ProductCreateRequestDto } from './dtos/requests/product-create.request.dto';
+import { ProductUpdateRequestDto } from './dtos/requests/product-update.request.dto';
 
 const { PRODUCTS } = PermissionResource;
-const { READALL, READOWN, CREATEONE, DELETEONE, UPDATEONE } = PermissionActions;
+const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class ProductController extends Controller {
   public path = '/products';
@@ -25,11 +26,11 @@ export class ProductController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READALL, PRODUCTS), this.getAllProducts)
-      .get(`${this.path}/:id`, grantAccess(READOWN, PRODUCTS), this.getProductById)
-      .post(`${this.path}`, grantAccess(CREATEONE, PRODUCTS), this.createProduct)
-      .delete(`${this.path}/:id`, grantAccess(DELETEONE, PRODUCTS), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATEONE, PRODUCTS), this.modifyProduct);
+      .get(`${this.path}`, grantAccess(READ_ALL, PRODUCTS), this.getAllProducts)
+      .get(`${this.path}/:id`, grantAccess(READ_OWN, PRODUCTS), this.getProductById)
+      .post(`${this.path}`, grantAccess(CREATE_ONE, PRODUCTS), this.createProduct)
+      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PRODUCTS), this.deleteProduct)
+      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PRODUCTS), this.modifyProduct);
   }
 
   private getAllProducts = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
@@ -53,7 +54,7 @@ export class ProductController extends Controller {
   };
 
   private createProduct = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
-    const productData: ProductCreateDto = req.body;
+    const productData: ProductCreateRequestDto = req.body;
 
     try {
       const createdProduct = await this.productService.create(productData, req.user._id);
@@ -67,7 +68,7 @@ export class ProductController extends Controller {
     const { id } = req.params;
 
     try {
-      const productData: ProductUpdateDto = req.body;
+      const productData: ProductUpdateRequestDto = req.body;
       const product = await this.productService.updateById(id, productData);
       res.status(OK).send(product);
     } catch (err) {
@@ -75,7 +76,7 @@ export class ProductController extends Controller {
     }
   };
 
-  private deletePost = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private deleteProduct = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     const { id } = req.params;
 
     try {

@@ -3,17 +3,68 @@ import { PermissionResource } from './enums/permission-resource.enum';
 import { PermissionActions } from './enums/permission-actions.enum';
 import { PermissionRules } from './interfaces/permission-rules.interface';
 
-const { PRODUCTS } = PermissionResource;
-const { CREATEONE, DELETEONE, READALL, READONE, READOWN, UPDATEONE } = PermissionActions;
+const { ALLIANCES, GROUPS, ORDERS, PERIODS, PRODUCTS, PROFILES, USERS, YEARS } = PermissionResource;
+const { CREATE_ONE, DELETE_ONE, READ_ALL, READ_ONE, READ_OWN, UPDATE_ONE, UPDATE_OWN } = PermissionActions;
 const { ADMIN, SUPER, USER } = PermissionRoles;
 
 export const permissions: PermissionRules = {
+  [ALLIANCES]: {
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
+  [GROUPS]: {
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
+  [ORDERS]: {
+    [READ_ALL]: { granted: [ADMIN, SUPER] },
+    [READ_ONE]: { granted: [ADMIN, SUPER] },
+    [READ_OWN]: { granted: [USER, ADMIN, SUPER], check: [USER] },
+    [CREATE_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_OWN]: { granted: [USER, ADMIN, SUPER], check: [USER] },
+  },
+  [PERIODS]: {
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
   [PRODUCTS]: {
-    [READALL]: { granted: [USER, ADMIN, SUPER] },
-    [READONE]: { granted: [USER, ADMIN, SUPER] },
-    [READOWN]: { granted: [USER, ADMIN, SUPER], check: [USER] },
-    [CREATEONE]: { granted: [ADMIN, SUPER] },
-    [DELETEONE]: { granted: [ADMIN, SUPER] },
-    [UPDATEONE]: { granted: [ADMIN, SUPER] },
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
+  [PROFILES]: {
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
+  [USERS]: {
+    [READ_ALL]: { granted: [ADMIN, SUPER] },
+    [READ_ONE]: { granted: [ADMIN, SUPER] },
+    [READ_OWN]: { granted: [USER, ADMIN, SUPER], check: [USER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
+  },
+  [YEARS]: {
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
+    [CREATE_ONE]: { granted: [ADMIN, SUPER] },
+    [DELETE_ONE]: { granted: [ADMIN, SUPER] },
+    [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
   },
 };

@@ -4,26 +4,26 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import QRCode from 'qrcode';
 import speakeasy from 'speakeasy';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.interface';
+import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
 import { Login } from './interfaces/login.interface';
 import { LoginDto } from './dtos/login.dto';
 import { Logout } from './interfaces/logout.interface';
 import { Register } from './interfaces/register.interface';
 import { SecondFactorAuthentication } from './interfaces/second-factor-authentication.interface';
-import { SendExceptionWithPayload } from '../../common/exceptions/send-exception-with-payload.exception';
 import { TokenData } from './interfaces/token-data.interface';
 import { TwoFactorAuthenticationCode } from './interfaces/two-factor-authentication-code.interface';
-import { User } from '../user/interfaces/user.interface';
-import { userModel } from '../user/models/user.model';
+import { User } from '../../modules/user/interfaces/user.interface';
+import { UserModel } from '../../modules/user/models/user.model';
 import { UserWithThatEmailAlreadyExistsException } from '../../common/exceptions/user-with-that-email-already-exists.exception';
-import { WrongAuthenticationTokenException } from '../../common/exceptions/wrong-authentication-token.exception';
+import { SendExceptionWithPayload } from '../../common/exceptions/send-exception-with-payload.exception';
 import { WrongCredentialsException } from '../../common/exceptions/wrong-credentials.exception';
+import { WrongAuthenticationTokenException } from '../../common/exceptions/wrong-authentication-token.exception';
+import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.interface';
 
 export class AuthenticationService {
-  private user = userModel;
+  private user = UserModel;
 
-  public register = async (userData: CreateUserDto): Promise<Register> => {
+  public register = async (userData: UserCreateRequestDto): Promise<Register> => {
     if (await this.user.findOne({ email: userData.email })) throw new UserWithThatEmailAlreadyExistsException(userData.email);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
