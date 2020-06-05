@@ -24,21 +24,24 @@ export const grantAccess = (action: string, resource: string): express.RequestHa
       const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
       const { role } = verificationResponse;
 
-      if (role)
-        if (!compareStrings(role, await authenticationService.getRoleForUser(req.user._id))) {
-          next(new ForbiddenException("You don't have enough permission to perform this action"));
-        }
+      if (role) {
+        const roleMatch = compareStrings(role, await authenticationService.getRoleForUser(req.user._id));
 
-      const permission = await permissionChecker(role, action, resource, {
-        permissions,
-        resourceId: req.params.id || null,
-        userId: req.user._id,
-        createdByIdField: 'çreatedBy',
-      });
+        if (!roleMatch) next(new ForbiddenException("You don't have enough permission to perform this action"));
 
-      if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
+        const permission = await permissionChecker(role, action, resource, {
+          permissions,
+          resourceId: req.params.id || null,
+          userId: req.user._id,
+          createdByIdField: 'createdBy',
+        });
 
-      next();
+        if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
+
+        next();
+      } else {
+        next(new ForbiddenException("You don't have enough permission to perform this action"));
+      }
     } catch (err) {
       next(err);
     }

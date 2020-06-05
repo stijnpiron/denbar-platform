@@ -1,7 +1,7 @@
 import { server } from '../../../server';
 import { UserModel } from '../../modules/user/models/user.model';
 import { expect } from 'chai';
-import { OK } from 'http-status-codes';
+import { BAD_REQUEST, OK } from 'http-status-codes';
 import { User } from '../../modules/user/interfaces/user.interface';
 import { UserTypes } from '../../modules/user/enums/user-types.enum';
 
@@ -21,17 +21,15 @@ describe('Authentication Controller tests', () => {
 
   before((done) => {
     supertest = require('supertest')(server.getExpressInstance());
-    console.info('server initialized');
     done();
   });
 
   before(async () => {
     await UserModel.findOneAndDelete({ email: testUser.email });
-    console.info('users deleted');
   });
 
   after(async () => {
-    await UserModel.findByIdAndDelete(testUser._id);
+    await UserModel.findByIdAndRemove(testUser._id);
   });
 
   describe('response codes when not authorized', () => {
@@ -63,9 +61,9 @@ describe('Authentication Controller tests', () => {
         testUser = res.body;
         expect(res.status).to.equal(OK);
       });
+
       it('POST /auth/register - register duplicate user - 400', async () => {
         const res = await supertest.post('/api/auth/register').send(testUser);
-        testUser = res.body;
         expect(res.status).to.equal(BAD_REQUEST);
       });
 
