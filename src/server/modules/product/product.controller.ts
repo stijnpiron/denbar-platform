@@ -11,7 +11,7 @@ import { ProductCreateRequestDto } from './dtos/requests/product-create.request.
 import { ProductUpdateRequestDto } from './dtos/requests/product-update.request.dto';
 
 const { PRODUCTS } = PermissionResource;
-const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
+const { READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class ProductController extends Controller {
   public path = '/products';
@@ -24,9 +24,10 @@ export class ProductController extends Controller {
   }
 
   private initializeRoutes(): void {
+    this.router.get(`${this.path}`, this.getAllProducts);
+
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, PRODUCTS), this.getAllProducts)
       .get(`${this.path}/:id`, grantAccess(READ_OWN, PRODUCTS), this.getProductById)
       .post(`${this.path}`, grantAccess(CREATE_ONE, PRODUCTS), this.createProduct)
       .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PRODUCTS), this.deleteProduct)

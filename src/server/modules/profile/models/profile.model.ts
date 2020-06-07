@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import { Profile } from '../interfaces/profile.interface';
 
-const profileSchema = new mongoose.Schema(
+export const profileSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    active: { type: Boolean, default: false },
+    archived: { type: Boolean, default: false },
     createdBy: {
       ref: 'User',
       type: mongoose.Schema.Types.ObjectId,

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Alliance } from '../interfaces/alliance.interface';
 
-const allianceSchema = new mongoose.Schema(
+export const allianceSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
   },
