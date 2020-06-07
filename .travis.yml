@@ -8,10 +8,12 @@ branches:
   only:
     - master
     - test
+    - dev
 deploy:
   provider: heroku
   app:
     master: denbar
     test: denbar-dev
+    dev: denbar-dev
   api_key:
     secure: I+2emXq+sGMuOj+75ZcUP5PSrseuQF7hocqfeii+v1zDit1WI9fNlzMBtIo3avpJWZTbHftApPwqmz6FyIpm9RYMNjjH0aGkiFXAI3Nk4irfWvbhp87jNG5sE2DaLsp/8n0DG86L6xDu5AsS3ZWP97fCnlApM+FNyfEYqO4AbojRl+HuQbIh1uI9OJ6ftvA//DQVo0LEOfOQK+1w3cYoe9jNJM932xsN68BD/oGVuoaEtVBQb9XxJbvk5fn1EJ/8ZZIOjE+tQVQcViBm75vh5PqmQcN66nfL2/h9XPSQsUA/TgaFyhD09LFaEKZNooKpa6FA9CtjS1ecS6DgobinN2zcgoDVGm898XOjBchrdtexSbfy8/8t7F0pT7vmWIl7FHhN+O4TY1moeK+234CYemmdLcrvwzKYu9cmCFBYCopJ67hkLPVI3grtJvhecqJ9YPahIUnqqtZk9Zxz7ot5kjjt1tJlv8go4L/kVw9JzrIygUFNCZIR0WSg43FbTo4q8hc9G7YfDTY614Zbm9LNuW4V+eMjhg5BX0TcLzjLIzAbeFzlEXH8gW3kgpGEmF3WwsJWdzeeXxShxYlFnTYRZQKUEDQ4DGf3IjO8GMhtNnEgqOs+n6cFKGanpWSo2z4DyaAo2N+wa3qhPJ0u8Q/tnOn62XGxbxD7vtUFPxmXXSk=
