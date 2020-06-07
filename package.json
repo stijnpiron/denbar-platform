@@ -6,10 +6,11 @@
   "scripts": {
     "build:ts": "npm run rem-dist && npm run tsc",
     "dev:client": "npm run start --prefix src/client",
-    "dev:server": "ts-node-dev --respawn src/server/server.ts",
-    "dev:all": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "ts-node-dev src/server/server.ts",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\"",
     "docs": "typedoc --out docs --mode modules src",
     "format:server": "prettier --write src/**/*.ts",
+    "heroku-postbuild": "npm i --prefix src/client && npm run build --prefix src/client",
     "lint:server": "eslint src/server/**/*.ts --fix",
     "lint:commit": "eslint src/server/**/*.ts",
     "postinstall": "npm run build:ts",
@@ -92,6 +93,6 @@
     "ts-mocha": "^7.0.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typedoc": "^0.17.7",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   }
 }

@@ -2,7 +2,7 @@ import { ProductOptional } from '../../interfaces/product.interface';
 
 export interface ProductUpdateResponseDto extends ProductOptional {
   name: string;
-  active: boolean;
+  archived: boolean;
   createdAt: Date;
   lastEdited: Date;
 }
