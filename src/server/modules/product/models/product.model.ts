@@ -20,7 +20,7 @@ const productPriceSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    active: { type: Boolean, default: false },
+    archived: { type: Boolean, default: false },
     category: { type: String, required: true },
     createdBy: {
       ref: 'User',
