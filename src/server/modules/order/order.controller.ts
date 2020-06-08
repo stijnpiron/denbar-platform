@@ -5,7 +5,6 @@ import { grantAccess } from '../../common/middlewares/permission/permission.midd
 import { OK } from 'http-status-codes';
 import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { OrderService } from './order.service';
 import { OrderCreateRequestDto } from './dtos/requests/order-create.request.dto';
 import { OrderUpdateRequestDto } from './dtos/requests/order-update.request.dto';
@@ -25,12 +24,11 @@ export class OrderController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, ORDERS), this.getAllOrders)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, ORDERS), this.getOrderById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, ORDERS), this.createOrder)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, ORDERS), this.deleteOrder)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, ORDERS), this.modifyOrder);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: ORDERS }), this.getAllOrders)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: ORDERS }), this.getOrderById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: ORDERS }), this.createOrder)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: ORDERS }), this.deleteOrder)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: ORDERS }), this.modifyOrder);
   }
 
   private getAllOrders = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

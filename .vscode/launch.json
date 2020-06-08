@@ -7,8 +7,17 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Debug - Windows",
       "program": "${workspaceFolder}\\src\\server\\server.ts",
+      "sourceMaps": true,
+      "trace": "all",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug - MacOs",
+      "program": "${workspaceFolder}/src/server/server.ts",
       "sourceMaps": true,
       "trace": "all",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"]

@@ -1,5 +1,6 @@
 export enum PermissionRoles {
-  USER = 'user',
   ADMIN = 'admin',
+  GUEST = 'guest',
   SUPER = 'super',
+  USER = 'user',
 }

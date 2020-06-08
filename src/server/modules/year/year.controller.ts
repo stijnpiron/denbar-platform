@@ -8,7 +8,6 @@ import { PermissionActions } from '../../common/middlewares/permission/enums/per
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { YearCreateRequestDto } from './dtos/requests/year-create.request.dto';
 import { YearUpdateRequestDto } from './dtos/requests/year-update.request.dto';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 
 const { YEARS } = PermissionResource;
 const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
@@ -25,12 +24,11 @@ export class YearController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, YEARS), this.getAllYears)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, YEARS), this.getYearById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, YEARS), this.createYear)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, YEARS), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, YEARS), this.modifyYear);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: YEARS }), this.getAllYears)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: YEARS }), this.getYearById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: YEARS }), this.createYear)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: YEARS }), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: YEARS }), this.modifyYear);
   }
 
   private getAllYears = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
