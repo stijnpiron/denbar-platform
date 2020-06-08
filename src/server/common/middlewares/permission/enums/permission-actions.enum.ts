@@ -1,4 +1,5 @@
 export enum PermissionActions {
+  AUHTENTICATION = 'authentication',
   CREATE_ONE = 'create-one',
   DELETE_ONE = 'delete-one',
   DELETE_OWN = 'delete-own',

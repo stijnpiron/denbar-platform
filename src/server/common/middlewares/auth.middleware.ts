@@ -13,7 +13,7 @@ export function authMiddleware(omitSecondFactor = false): RequestHandler {
     if (cookies && cookies.Authorization) {
       const secret = process.env.JWT_SECRET;
 
-      //TODO: add permission checker here as the GUEST flows must always be allowed to be executed
+      // TODO: add permission checker here as the GUEST flows must always be allowed to be executed
       try {
         const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
         const { _id: id, isSecondFactorAuthenticated } = verificationResponse;

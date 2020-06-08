@@ -26,11 +26,11 @@ export class ProfileController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, PROFILES), this.getAllProfiles)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, PROFILES), this.getProfileById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, PROFILES), this.createProfile)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PROFILES), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PROFILES), this.modifyProfile);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: PROFILES }), this.getAllProfiles)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: PROFILES }), this.getProfileById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: PROFILES }), this.createProfile)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: PROFILES }), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: PROFILES }), this.modifyProfile);
   }
 
   private getAllProfiles = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

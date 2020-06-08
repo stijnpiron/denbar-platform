@@ -26,11 +26,11 @@ export class AllianceController extends Controller {
   private initializeRoutes(): void {
     this.router
       .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, ALLIANCES), this.getAllAlliances)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, ALLIANCES), this.getAllianceById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, ALLIANCES), this.createAlliance)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, ALLIANCES), this.deletePost)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, ALLIANCES), this.modifyAlliance);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: ALLIANCES }), this.getAllAlliances)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: ALLIANCES }), this.getAllianceById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: ALLIANCES }), this.createAlliance)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: ALLIANCES }), this.deletePost)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: ALLIANCES }), this.modifyAlliance);
   }
 
   private getAllAlliances = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

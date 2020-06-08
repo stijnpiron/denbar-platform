@@ -13,8 +13,6 @@ export const permissionChecker = async (
 
   const { resourceId, userId, permissions, createdByIdField } = checkParams;
 
-  console.log(permissions[resource][action].granted.filter((r: string) => r === PermissionRoles.GUEST).length);
-
   // when GUEST is allowed to execute the action, everyone is, so return true to give permissions
   if (permissions[resource][action].granted.filter((r: string) => r === PermissionRoles.GUEST).length !== 0) return true;
 

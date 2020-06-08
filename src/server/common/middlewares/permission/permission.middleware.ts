@@ -1,3 +1,5 @@
+import { PermissionResource } from './enums/permission-resource.enum';
+import { PermissionActions } from './enums/permission-actions.enum';
 import { RequestWithUser } from './../../interfaces/request-with-user.interface';
 import { ForbiddenException } from '../../exceptions/forbidden.exception';
 import { AuthenticationTokenMissingException } from '../../exceptions/authentication-token-missing.exception';
@@ -8,44 +10,56 @@ import { AuthenticationService } from '../../../modules/authentication/authentic
 import { compareStrings } from '../../utils';
 import { permissionChecker } from './permission-checker';
 import { permissions } from './permission.rules';
+import { UserModel } from '../../../modules/user/models/user.model';
+import { WrongAuthenticationTokenException } from '../../../common/exceptions/wrong-authentication-token.exception';
 
-export const grantAccess = (action: string, resource: string): express.RequestHandler => async (
+export const grantAccess = (params: { action: PermissionActions; resource: PermissionResource; omitSecondFactor?: boolean }): express.RequestHandler => async (
   req: RequestWithUser,
   _res: express.Response,
   next: express.NextFunction
 ): Promise<void> => {
+  const { action, resource, omitSecondFactor } = params;
   const authenticationService = new AuthenticationService();
   const { cookies } = req;
 
-  if (cookies.Authorization) {
-    const secret = process.env.JWT_SECRET;
+  let permission = true;
 
-    try {
-      const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
-      const { role } = verificationResponse;
+  if (action !== PermissionActions.AUHTENTICATION)
+    if (cookies.Authorization) {
+      const secret = process.env.JWT_SECRET;
 
-      if (role) {
-        const roleMatch = compareStrings(role, await authenticationService.getRoleForUser(req.user._id));
+      try {
+        const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
+        const { _id: id, isSecondFactorAuthenticated, role } = verificationResponse;
+        const user = await UserModel.findById(id);
 
-        if (!roleMatch) next(new ForbiddenException("You don't have enough permission to perform this action"));
+        if (user) {
+          if (!omitSecondFactor && user.isTwoFactorAuthenticationEnabled && !isSecondFactorAuthenticated) next(new WrongAuthenticationTokenException());
+          else req.user = user;
 
-        const permission = await permissionChecker(role, action, resource, {
-          permissions,
-          resourceId: req.params.id || null,
-          userId: req.user._id,
-          createdByIdField: 'createdBy',
-        });
+          if (role) {
+            const roleMatch = compareStrings(role, await authenticationService.getRoleForUser(req.user._id));
 
-        if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
+            if (!roleMatch) next(new ForbiddenException("You don't have enough permission to perform this action"));
 
-        next();
-      } else {
-        next(new ForbiddenException("You don't have enough permission to perform this action"));
+            permission = await permissionChecker(role, action, resource, {
+              permissions,
+              resourceId: req.params.id || null,
+              userId: req.user._id,
+              createdByIdField: 'createdBy',
+            });
+
+            if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
+          } else {
+            next(new ForbiddenException("You don't have enough permission to perform this action"));
+          }
+        }
+      } catch (err) {
+        next(err);
       }
-    } catch (err) {
-      next(err);
+    } else {
+      next(new AuthenticationTokenMissingException());
     }
-  } else {
-    next(new AuthenticationTokenMissingException());
-  }
+
+  next();
 };
