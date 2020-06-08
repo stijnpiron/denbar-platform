@@ -2,7 +2,6 @@ import { OK } from 'http-status-codes';
 import { GroupService } from './group.service';
 import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
 import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
 import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
@@ -25,7 +24,6 @@ export class GroupController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
       .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: GROUPS }), this.getAllGroups)
       .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: GROUPS }), this.getGroupById)
       .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: GROUPS }), this.createGroup)

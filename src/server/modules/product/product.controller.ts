@@ -10,7 +10,7 @@ import { ProductCreateRequestDto } from './dtos/requests/product-create.request.
 import { ProductUpdateRequestDto } from './dtos/requests/product-update.request.dto';
 
 const { PRODUCTS } = PermissionResource;
-const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
+const { READ_ALL, READ_ONE, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class ProductController extends Controller {
   public path = '/products';
@@ -24,9 +24,8 @@ export class ProductController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`)
       .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: PRODUCTS }), this.getAllProducts)
-      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: PRODUCTS }), this.getProductById)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_ONE, resource: PRODUCTS }), this.getProductById)
       .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: PRODUCTS }), this.createProduct)
       .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: PRODUCTS }), this.deleteProduct)
       .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: PRODUCTS }), this.modifyProduct);

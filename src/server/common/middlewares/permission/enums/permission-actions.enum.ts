@@ -6,6 +6,7 @@ export enum PermissionActions {
   READ_ALL = 'read-all',
   READ_ONE = 'read-one',
   READ_OWN = 'read-own',
+  TFA = 'tfa',
   UPDATE_ONE = 'update-one',
   UPDATE_OWN = 'update-own',
 }

@@ -8,16 +8,16 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthenticationService } from '../../../modules/authentication/authentication.service';
 import { compareStrings } from '../../utils';
-import { permissionChecker } from './permission-checker';
+import { checkForGuest, permissionChecker } from './permission-checker';
 import { permissions } from './permission.rules';
 import { UserModel } from '../../../modules/user/models/user.model';
 import { WrongAuthenticationTokenException } from '../../../common/exceptions/wrong-authentication-token.exception';
 
-export const grantAccess = (params: { action: PermissionActions; resource: PermissionResource; omitSecondFactor?: boolean }): express.RequestHandler => async (
-  req: RequestWithUser,
-  _res: express.Response,
-  next: express.NextFunction
-): Promise<void> => {
+export const grantAccess = (params: {
+  action?: PermissionActions;
+  resource?: PermissionResource;
+  omitSecondFactor?: boolean;
+}): express.RequestHandler => async (req: RequestWithUser, _res: express.Response, next: express.NextFunction): Promise<void> => {
   const { action, resource, omitSecondFactor } = params;
   const authenticationService = new AuthenticationService();
   const { cookies } = req;
@@ -25,40 +25,45 @@ export const grantAccess = (params: { action: PermissionActions; resource: Permi
   let permission = true;
 
   if (action !== PermissionActions.AUHTENTICATION)
-    if (cookies.Authorization) {
-      const secret = process.env.JWT_SECRET;
+    if (!(await checkForGuest(action, resource, permissions))) {
+      if (cookies.Authorization) {
+        const secret = process.env.JWT_SECRET;
 
-      try {
-        const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
-        const { _id: id, isSecondFactorAuthenticated, role } = verificationResponse;
-        const user = await UserModel.findById(id);
+        try {
+          const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken;
+          const { _id: id, isSecondFactorAuthenticated, role } = verificationResponse;
+          const user = await UserModel.findById(id);
 
-        if (user) {
-          if (!omitSecondFactor && user.isTwoFactorAuthenticationEnabled && !isSecondFactorAuthenticated) next(new WrongAuthenticationTokenException());
-          else req.user = user;
+          if (user) {
+            if (!omitSecondFactor && user.isTwoFactorAuthenticationEnabled && !isSecondFactorAuthenticated) next(new WrongAuthenticationTokenException());
+            else req.user = user;
 
-          if (role) {
-            const roleMatch = compareStrings(role, await authenticationService.getRoleForUser(req.user._id));
+            if (role) {
+              const roleMatch = compareStrings(role, await authenticationService.getRoleForUser(req.user._id));
 
-            if (!roleMatch) next(new ForbiddenException("You don't have enough permission to perform this action"));
+              if (!roleMatch) next(new ForbiddenException("You don't have enough permission to perform this action"));
 
-            permission = await permissionChecker(role, action, resource, {
-              permissions,
-              resourceId: req.params.id || null,
-              userId: req.user._id,
-              createdByIdField: 'createdBy',
-            });
+              permission = await permissionChecker(
+                { action, resource, role },
+                {
+                  permissions,
+                  resourceId: req.params.id || null,
+                  userId: req.user._id,
+                  createdByIdField: 'createdBy',
+                }
+              );
 
-            if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
-          } else {
-            next(new ForbiddenException("You don't have enough permission to perform this action"));
+              if (!permission) next(new ForbiddenException("You don't have enough permission to perform this action"));
+            } else {
+              next(new ForbiddenException("You don't have enough permission to perform this action"));
+            }
           }
+        } catch (err) {
+          next(err);
         }
-      } catch (err) {
-        next(err);
+      } else {
+        next(new AuthenticationTokenMissingException());
       }
-    } else {
-      next(new AuthenticationTokenMissingException());
     }
 
   next();

@@ -6,7 +6,6 @@ import { AllianceUpdateRequestDto } from './dtos/requests/alliance-update.reques
 import { PermissionResource } from '../../common/middlewares/permission/enums/permission-resource.enum';
 import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
 import { Controller } from '../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { grantAccess } from '../../common/middlewares/permission/permission.middleware';
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 
@@ -25,7 +24,6 @@ export class AllianceController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
       .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: ALLIANCES }), this.getAllAlliances)
       .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: ALLIANCES }), this.getAllianceById)
       .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: ALLIANCES }), this.createAlliance)

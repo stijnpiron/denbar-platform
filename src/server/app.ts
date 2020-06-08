@@ -1,4 +1,3 @@
-import mongooseMorgan from 'mongoose-morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
@@ -12,6 +11,7 @@ import { stringContainsElementOfArray } from './common/utils';
 import { Controller } from './common/interfaces/controller.interface';
 import { errorMiddleware } from './common/middlewares/error.middleware';
 import { loggerMiddleware } from './common/middlewares/logger.middleware';
+import { MongooseMorgan } from 'mongoose-morgan';
 
 export class App {
   public app: express.Application;
@@ -46,7 +46,7 @@ export class App {
     if (!process.env.TESTRUN)
       this.app.use(
         process.env.NODE_ENV !== 'development'
-          ? mongooseMorgan(
+          ? MongooseMorgan(
               {
                 connectionString: this.mongoConnectionString,
                 collection: process.env.LOG_MORGAN,
