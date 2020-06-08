@@ -15,6 +15,6 @@
     "strictNullChecks": false,
     "target": "es2020"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/server/**/*.ts"],
   "exclude": ["node_modules", "assets", ".vscode", "dist", "src/**/*.test.ts"]
 }
