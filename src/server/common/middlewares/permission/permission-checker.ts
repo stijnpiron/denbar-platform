@@ -13,11 +13,15 @@ export const permissionChecker = async (
 
   const { resourceId, userId, permissions, createdByIdField } = checkParams;
 
+  console.log(permissions[resource][action].granted.filter((r: string) => r === PermissionRoles.GUEST).length);
+
+  // when GUEST is allowed to execute the action, everyone is, so return true to give permissions
+  if (permissions[resource][action].granted.filter((r: string) => r === PermissionRoles.GUEST).length !== 0) return true;
+
   // if required parameters are present, go check for correct role. it failed, return false as permissions are not met
   if (permissions[resource][action].granted.filter((r: string) => r === role).length === 0) return false;
-
   // go find a resource with matching id and userId as createdBy
-  if (action.includes('own') && permissions[resource][action].check?.includes(role as PermissionRoles))
+  else if (action.includes('own') && permissions[resource][action].check?.includes(role as PermissionRoles))
     if (
       !(await mongoose.connection.db
         .collection(resource)

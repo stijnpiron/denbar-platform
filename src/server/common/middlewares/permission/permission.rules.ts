@@ -5,7 +5,7 @@ import { PermissionRules } from './interfaces/permission-rules.interface';
 
 const { ALLIANCES, GROUPS, ORDERS, PERIODS, PRODUCTS, PROFILES, USERS, YEARS } = PermissionResource;
 const { CREATE_ONE, DELETE_ONE, READ_ALL, READ_ONE, READ_OWN, UPDATE_ONE, UPDATE_OWN } = PermissionActions;
-const { ADMIN, SUPER, USER } = PermissionRoles;
+const { ADMIN, SUPER, USER, GUEST } = PermissionRoles;
 
 export const permissions: PermissionRules = {
   [ALLIANCES]: {
@@ -16,7 +16,7 @@ export const permissions: PermissionRules = {
     [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
   },
   [GROUPS]: {
-    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER, GUEST] },
     [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
     [CREATE_ONE]: { granted: [ADMIN, SUPER] },
     [DELETE_ONE]: { granted: [ADMIN, SUPER] },
@@ -39,7 +39,7 @@ export const permissions: PermissionRules = {
     [UPDATE_ONE]: { granted: [ADMIN, SUPER] },
   },
   [PRODUCTS]: {
-    [READ_ALL]: { granted: [USER, ADMIN, SUPER] },
+    [READ_ALL]: { granted: [USER, ADMIN, SUPER, GUEST] },
     [READ_ONE]: { granted: [USER, ADMIN, SUPER] },
     [CREATE_ONE]: { granted: [ADMIN, SUPER] },
     [DELETE_ONE]: { granted: [ADMIN, SUPER] },
