@@ -6,7 +6,7 @@
   "scripts": {
     "build:ts": "npm run rem-dist && npm run tsc",
     "dev:client": "npm run start --prefix src/client",
-    "dev:server": "ts-node-dev src/server/server.ts",
+    "dev:server": "ts-node-dev --project tsconfig.dev.json src/server/server.ts",
     "dev": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\"",
     "docs": "typedoc --out docs --mode modules src",
     "format": "prettier --write src/**/*.ts",
@@ -14,13 +14,14 @@
     "lint": "eslint src/**/*.ts --fix",
     "lint:commit": "eslint src/**/*.ts",
     "postinstall": "npm run build:ts",
+    "prep:debug": "npm run build:ts",
     "rem-dist": "rimraf ./dist",
     "serve": "node dist/server.js",
     "start": "npm run serve",
     "start:debug": "npm run rem-dist && npm run build:ts && node dist/server.js",
-    "test": "env TESTRUN=testrun ts-mocha 'src/**/*.test.ts' --recursive",
+    "test:server": "env TESTRUN=testrun ts-mocha 'src/server/**/*.test.ts' --recursive",
     "tsc": "tsc",
-    "validate:dev:server": " npm i && npm run rem-dist && npm run format && npm run lint && npm run test && npm run rem-dist"
+    "validate:dev:server": "npm i && npm run rem-dist && npm run format && npm run lint && npm run test:server && npm run rem-dist"
   },
   "repository": {
     "type": "git",

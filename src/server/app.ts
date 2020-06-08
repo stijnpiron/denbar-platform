@@ -22,10 +22,10 @@ export class App {
   constructor(controllers: Controller[]) {
     console.info('Initializing server...');
     this.app = express();
+    this.initializeMiddlewares();
     this.initializeSwagger();
     this.initializeLogging();
     this.connectToTheDatabase();
-    this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeClient();
     this.initializeErrorHandling();
