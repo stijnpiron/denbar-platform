@@ -5,13 +5,12 @@ import { grantAccess } from '../../common/middlewares/permission/permission.midd
 import { OK } from 'http-status-codes';
 import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { ProductService } from './product.service';
 import { ProductCreateRequestDto } from './dtos/requests/product-create.request.dto';
 import { ProductUpdateRequestDto } from './dtos/requests/product-update.request.dto';
 
 const { PRODUCTS } = PermissionResource;
-const { READ_ALL, READ_OWN, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
+const { READ_ALL, READ_ONE, CREATE_ONE, DELETE_ONE, UPDATE_ONE } = PermissionActions;
 
 export class ProductController extends Controller {
   public path = '/products';
@@ -25,12 +24,11 @@ export class ProductController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, PRODUCTS), this.getAllProducts)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, PRODUCTS), this.getProductById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, PRODUCTS), this.createProduct)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PRODUCTS), this.deleteProduct)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PRODUCTS), this.modifyProduct);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: PRODUCTS }), this.getAllProducts)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_ONE, resource: PRODUCTS }), this.getProductById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: PRODUCTS }), this.createProduct)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: PRODUCTS }), this.deleteProduct)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: PRODUCTS }), this.modifyProduct);
   }
 
   private getAllProducts = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
