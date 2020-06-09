@@ -20,7 +20,12 @@ export class GroupService implements CRUD {
   private group = GroupModel;
 
   public list = async (limit?: number, page?: number): Promise<GroupListResponse> => {
-    const groups = await this.group.find();
+    const groups = await this.group
+      .find({ 'year.year': 2020 }, (err, system) => {
+        if (err) console.error(err);
+        else console.error(system);
+      })
+      .populate('year alliance profile period', 'year name name name');
 
     const response: GroupListResponse = { statusCode: INTERNAL_SERVER_ERROR, message: 'Error occured when getting a list of groups', data: null };
 

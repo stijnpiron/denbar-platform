@@ -1,3 +1,5 @@
+import { PermissionResource } from './../../common/middlewares/permission/enums/permission-resource.enum';
+import { grantAccess } from './../../common/middlewares/permission/permission.middleware';
 import express from 'express';
 import { OK } from 'http-status-codes';
 import { AuthenticationService } from './authentication.service';
@@ -7,9 +9,12 @@ import { TwoFactorAuthenticationDto } from './dtos/two-factor-authentication.dto
 import { UserModel } from '../../modules/user/models/user.model';
 import { Controller } from '../../common/interfaces/controller.interface';
 import { validationMiddleware } from '../../common/middlewares/validation.middleware';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
+import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
+
+const { TFA, AUHTENTICATION } = PermissionActions;
+const { AUTH } = PermissionResource;
 
 export class AuthenticationController extends Controller {
   public path = '/auth';
@@ -23,18 +28,27 @@ export class AuthenticationController extends Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.post(`${this.path}/register`, validationMiddleware(UserCreateRequestDto), this.registration);
+    this.router.post(`${this.path}/register`, validationMiddleware(UserCreateRequestDto), grantAccess({ action: AUHTENTICATION }), this.registration);
 
-    this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), this.loggingIn);
-    this.router.post(`${this.path}/logout`, this.loggingOut);
+    this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), grantAccess({ action: AUHTENTICATION }), this.loggingIn);
+    this.router.post(`${this.path}/logout`, grantAccess({ action: AUHTENTICATION }), this.loggingOut);
 
-    this.router.post(`${this.path}/2fa/authenticate`, validationMiddleware(TwoFactorAuthenticationDto), authMiddleware(true), this.secondFactorAuthentication);
+    this.router.post(
+      `${this.path}/2fa/authenticate`,
+      validationMiddleware(TwoFactorAuthenticationDto),
+      grantAccess({ action: TFA, resource: AUTH, omitSecondFactor: true }),
+      this.secondFactorAuthentication
+    );
 
     this.router
-      .all(`${this.path}/*`, authMiddleware())
-      .get(`${this.path}`, authMiddleware(), this.auth)
-      .post(`${this.path}/2fa/generate`, this.generateTwoFactorAuthenticationCode)
-      .post(`${this.path}/2fa/toggle`, validationMiddleware(TwoFactorAuthenticationDto), this.toggleTwoFactorAuthentication);
+      .get(`${this.path}`, this.auth)
+      .post(`${this.path}/2fa/generate`, grantAccess({ action: TFA, resource: AUTH }), this.generateTwoFactorAuthenticationCode)
+      .post(
+        `${this.path}/2fa/toggle`,
+        validationMiddleware(TwoFactorAuthenticationDto),
+        grantAccess({ action: TFA, resource: AUTH }),
+        this.toggleTwoFactorAuthentication
+      );
   }
 
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

@@ -10,7 +10,7 @@ export interface Product extends ProductRequired {
 
 interface ProductBasics extends Resource {
   name: string;
-  active: boolean;
+  archived: boolean;
 }
 
 export interface ProductRequired extends ProductOptional {

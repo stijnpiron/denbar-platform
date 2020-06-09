@@ -5,7 +5,6 @@ import { grantAccess } from '../../common/middlewares/permission/permission.midd
 import { OK } from 'http-status-codes';
 import express from 'express';
 import { Controller } from '../../common/interfaces/controller.interface';
-import { authMiddleware } from '../../common/middlewares/auth.middleware';
 import { PeriodService } from './period.service';
 import { PeriodCreateRequestDto } from './dtos/requests/period-create.request.dto';
 import { PeriodUpdateRequestDto } from './dtos/requests/period-update.request.dto';
@@ -25,12 +24,11 @@ export class PeriodController extends Controller {
 
   private initializeRoutes(): void {
     this.router
-      .all(`${this.path}*`, authMiddleware())
-      .get(`${this.path}`, grantAccess(READ_ALL, PERIODS), this.getAllPeriods)
-      .get(`${this.path}/:id`, grantAccess(READ_OWN, PERIODS), this.getPeriodById)
-      .post(`${this.path}`, grantAccess(CREATE_ONE, PERIODS), this.createPeriod)
-      .delete(`${this.path}/:id`, grantAccess(DELETE_ONE, PERIODS), this.deletePeriod)
-      .put(`${this.path}/:id`, grantAccess(UPDATE_ONE, PERIODS), this.modifyPeriod);
+      .get(`${this.path}`, grantAccess({ action: READ_ALL, resource: PERIODS }), this.getAllPeriods)
+      .get(`${this.path}/:id`, grantAccess({ action: READ_OWN, resource: PERIODS }), this.getPeriodById)
+      .post(`${this.path}`, grantAccess({ action: CREATE_ONE, resource: PERIODS }), this.createPeriod)
+      .delete(`${this.path}/:id`, grantAccess({ action: DELETE_ONE, resource: PERIODS }), this.deletePeriod)
+      .put(`${this.path}/:id`, grantAccess({ action: UPDATE_ONE, resource: PERIODS }), this.modifyPeriod);
   }
 
   private getAllPeriods = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {

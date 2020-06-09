@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import { Period } from '../interfaces/period.interface';
 
-const periodSchema = new mongoose.Schema(
+export const periodSchema = new mongoose.Schema(
   {
+    name: { type: String, required: true },
     archived: { type: Boolean, default: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
