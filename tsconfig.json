@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "baseUrl": "./src",
+    "baseUrl": "./src/server",
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -10,11 +10,12 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "removeComments": true,
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src/server",
     "sourceMap": true,
     "strictNullChecks": false,
     "target": "es2020"
   },
   "include": ["src/server/**/*.ts"],
-  "exclude": ["node_modules", "assets", ".vscode", "dist", "src/**/*.test.ts"]
+  "exclude": ["node_modules", "assets", ".vscode", "dist", "src/**/*.test.ts", "src/client/**/*.ts", "src/client/node_modules"]
 }

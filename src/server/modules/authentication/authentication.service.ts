@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import QRCode from 'qrcode';
 import speakeasy from 'speakeasy';
-import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
 import { Login } from './interfaces/login.interface';
 import { LoginDto } from './dtos/login.dto';
 import { Logout } from './interfaces/logout.interface';
@@ -12,7 +11,7 @@ import { Register } from './interfaces/register.interface';
 import { SecondFactorAuthentication } from './interfaces/second-factor-authentication.interface';
 import { TokenData } from './interfaces/token-data.interface';
 import { TwoFactorAuthenticationCode } from './interfaces/two-factor-authentication-code.interface';
-import { User } from '../../modules/user/interfaces/user.interface';
+import { User, UserOptional } from '../../modules/user/interfaces/user.interface';
 import { UserModel } from '../../modules/user/models/user.model';
 import { UserWithThatEmailAlreadyExistsException } from '../../common/exceptions/user-with-that-email-already-exists.exception';
 import { SendExceptionWithPayload } from '../../common/exceptions/send-exception-with-payload.exception';
@@ -23,7 +22,7 @@ import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.
 export class AuthenticationService {
   private user = UserModel;
 
-  public register = async (userData: UserCreateRequestDto): Promise<Register> => {
+  public register = async (userData: UserOptional): Promise<Register> => {
     if (await this.user.findOne({ email: userData.email })) throw new UserWithThatEmailAlreadyExistsException(userData.email);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);

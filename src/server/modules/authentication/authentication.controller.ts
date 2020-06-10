@@ -1,3 +1,4 @@
+import { UserOptional } from './../user/interfaces/user.interface';
 import { PermissionResource } from './../../common/middlewares/permission/enums/permission-resource.enum';
 import { grantAccess } from './../../common/middlewares/permission/permission.middleware';
 import express from 'express';
@@ -52,7 +53,7 @@ export class AuthenticationController extends Controller {
   }
 
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
-    const userData: UserCreateRequestDto = req.body;
+    const userData: UserOptional = req.body;
 
     try {
       const { cookie, user } = await this.authenticationService.register(userData);
