@@ -30,7 +30,6 @@
     "lf": "npm run format && npm run lint",
     "lint:commit": "eslint 'src/**/*.{ts,tsx}'",
     "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
-    "pre-commit": "npm run format && npm run lint:commit",
     "start:first": "npm i && npm run start",
     "start": "react-scripts start",
     "test": "npm run lf && react-scripts test"
@@ -90,10 +89,5 @@
     "ts-jest": "^24.3.0",
     "typescript": "^3.8.3",
     "uuid": "^8.1.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run pre-commit"
-    }
   }
 }
