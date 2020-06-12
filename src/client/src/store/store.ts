@@ -2,9 +2,9 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import rootReducer from './store.reducer';
-import { initialState as app } from './app/app.reducer';
-import { initialState as user } from './user/user.reducer';
-import { State } from '../interfaces/state/state.interface';
+import { initialState as menu } from './menu/menu.reducer';
+import { initialState as auth } from './auth/auth.reducer';
+import { AppState } from '../interfaces/state/app-state.interface';
 
 declare global {
   interface Window {
@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const initialState: State = { app, user };
+const initialState: AppState = { menu, auth };
 
 export default function configureStore(preloadedState = initialState): any {
   const middlewares = [thunk];

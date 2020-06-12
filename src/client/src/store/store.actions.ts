@@ -1,9 +1,9 @@
-import * as app from './app/app.actions';
-import * as user from './user/user.actions';
+import * as menu from './menu/menu.actions';
+import * as auth from './auth/auth.actions';
 
 const allActions = {
-  app,
-  user,
+  auth,
+  menu,
 };
 
 export default allActions;
