@@ -94,7 +94,7 @@
     "rimraf": "^3.0.2",
     "supertest": "^4.0.2",
     "ts-mocha": "^7.0.0",
-    "ts-node-dev": "^1.0.0-pre.44",
+    "ts-node-dev": "^1.0.0-pre.47",
     "typedoc": "^0.17.7",
     "typescript": "^3.9.5"
   }
