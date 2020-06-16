@@ -23,7 +23,7 @@
     "directory-named-webpack-plugin": "^4.0.1",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^26.0.0",
     "polished": "^3.4.4",
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",
