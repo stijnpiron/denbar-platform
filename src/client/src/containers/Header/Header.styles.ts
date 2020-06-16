@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { Layout } from 'antd';
 import { borders, height } from '../../utils/global.styles';
 
-export const StyledHeader = styled.header<{ open: boolean }>`
+export const StyledHeader = styled(Layout.Header)<{ open: boolean }>`
   background-color: #fff;
   height: ${height.headerHeight};
   -webkit-box-shadow: ${({ open }): string => (open ? 'none' : borders.bottomBoxShadow)};

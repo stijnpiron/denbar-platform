@@ -8,7 +8,7 @@ const { loadProducts, loadProductsFailed, loadProductsSuccess } = storeActions.p
 
 const getProducts = async (dispatch: Dispatch<any>): Promise<void | Action> => {
   dispatch(loadProducts());
-  return await ProductRestService(ProductRestActions.GET_ALL, '')
+  return await ProductRestService({ action: ProductRestActions.GET_ALL })
     .then((productData: { data: ProductsState }) => dispatch(loadProductsSuccess(productData.data)))
     .catch((_err: any) => dispatch(loadProductsFailed()));
 };
