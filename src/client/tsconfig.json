@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,10 +14,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "sourceMap": true,
-    "baseUrl": "."
+    "typeRoots": ["../node_modules/@types"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src", "babel.config.js"],
+  "exclude": ["node_modules"]
 }

@@ -1,4 +1,3 @@
-import mongooseMorgan from 'mongoose-morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
@@ -8,10 +7,12 @@ import swaggerUI from 'swagger-ui-express';
 import util from 'util';
 import YAML from 'yaml';
 import path from 'path';
+import cors from 'cors';
 import { stringContainsElementOfArray } from './common/utils';
 import { Controller } from './common/interfaces/controller.interface';
 import { errorMiddleware } from './common/middlewares/error.middleware';
 import { loggerMiddleware } from './common/middlewares/logger.middleware';
+import { MongooseMorgan } from 'mongoose-morgan';
 
 export class App {
   public app: express.Application;
@@ -19,13 +20,20 @@ export class App {
   private readFile = util.promisify(fs.readFile);
   private mongoConnectionString = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}/${process.env.MONGO_DB}`;
 
+  private corsConfig = {
+    origin: true,
+    credentials: true,
+  };
+
   constructor(controllers: Controller[]) {
     console.info('Initializing server...');
     this.app = express();
+    this.app.use(cors(this.corsConfig));
+    this.app.options('*', cors(this.corsConfig));
+    this.initializeMiddlewares();
     this.initializeSwagger();
     this.initializeLogging();
     this.connectToTheDatabase();
-    this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeClient();
     this.initializeErrorHandling();
@@ -46,7 +54,7 @@ export class App {
     if (!process.env.TESTRUN)
       this.app.use(
         process.env.NODE_ENV !== 'development'
-          ? mongooseMorgan(
+          ? MongooseMorgan(
               {
                 connectionString: this.mongoConnectionString,
                 collection: process.env.LOG_MORGAN,
@@ -55,7 +63,7 @@ export class App {
                 skip: (req: express.Request, _res: express.Response) => stringContainsElementOfArray(req.originalUrl, ['/api/swagger']),
               },
               ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - \
-            :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
+            :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[token]'
             )
           : loggerMiddleware(['/swagger'])
       );

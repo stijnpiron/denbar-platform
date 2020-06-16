@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import QRCode from 'qrcode';
 import speakeasy from 'speakeasy';
-import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
 import { Login } from './interfaces/login.interface';
 import { LoginDto } from './dtos/login.dto';
 import { Logout } from './interfaces/logout.interface';
@@ -12,7 +11,7 @@ import { Register } from './interfaces/register.interface';
 import { SecondFactorAuthentication } from './interfaces/second-factor-authentication.interface';
 import { TokenData } from './interfaces/token-data.interface';
 import { TwoFactorAuthenticationCode } from './interfaces/two-factor-authentication-code.interface';
-import { User } from '../../modules/user/interfaces/user.interface';
+import { User, UserOptional } from '../../modules/user/interfaces/user.interface';
 import { UserModel } from '../../modules/user/models/user.model';
 import { UserWithThatEmailAlreadyExistsException } from '../../common/exceptions/user-with-that-email-already-exists.exception';
 import { SendExceptionWithPayload } from '../../common/exceptions/send-exception-with-payload.exception';
@@ -23,7 +22,16 @@ import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.
 export class AuthenticationService {
   private user = UserModel;
 
-  public register = async (userData: UserCreateRequestDto): Promise<Register> => {
+  public authenticate = async (userId: string): Promise<any> => {
+    try {
+      return await this.user.findById(userId).select('-password');
+    } catch (err) {
+      console.error(err.message);
+      throw new SendExceptionWithPayload(INTERNAL_SERVER_ERROR, 'error checking authentication', err.message);
+    }
+  };
+
+  public register = async (userData: UserOptional): Promise<Register> => {
     if (await this.user.findOne({ email: userData.email })) throw new UserWithThatEmailAlreadyExistsException(userData.email);
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -128,7 +136,7 @@ export class AuthenticationService {
   }
 
   public createCookie(tokenData: TokenData = { token: '', expiresIn: 0 }): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}; Path=/api`;
   }
 
   public getRoleForUser = async (userId: string): Promise<string> => {
