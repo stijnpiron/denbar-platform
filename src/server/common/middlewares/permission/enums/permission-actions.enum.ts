@@ -1,5 +1,6 @@
 export enum PermissionActions {
   AUHTENTICATION = 'authentication',
+  CHECK_AUTH = 'check-authentication',
   CREATE_ONE = 'create-one',
   DELETE_ONE = 'delete-one',
   DELETE_OWN = 'delete-own',
