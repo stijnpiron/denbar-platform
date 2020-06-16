@@ -49,7 +49,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
     try {
       const registerData: RegisterData = { name: formData.name.value, email: formData.email.value, password: formData.password.value };
       const res = await authService.register(registerData);
-      console.log(res);
 
       if (res._id) {
         dispatch(registerUserSuccess(res));
@@ -62,7 +61,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    console.warn('Failed:', errorInfo);
   };
 
   const fieldValidation = (fields: any[], data: any) => {
@@ -73,11 +72,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
         ...formData,
         [fields[0]?.name[0]]: { value: fields[0].value, status: !fields[0].errors.length },
       });
-      console.log(formData);
     }
     // setValidForm(Object.values(formData).filter((f: any) => !f.status).length === 0);
     setValidForm(true);
-    // console.log(formData);
   };
 
   return (
