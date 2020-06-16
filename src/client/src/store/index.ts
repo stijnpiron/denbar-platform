@@ -2,8 +2,9 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import rootReducer from './store.reducer';
-import { initialState as menu } from './menu/menu.reducer';
 import { initialState as auth } from './auth/auth.reducer';
+import { initialState as menu } from './menu/menu.reducer';
+import { initialState as products } from './products/products.reducer';
 import { AppState } from '../interfaces/state/app-state.interface';
 
 declare global {
@@ -12,17 +13,15 @@ declare global {
   }
 }
 
-const initialState: AppState = { menu, auth };
+const initialState: AppState = { auth, menu, products };
 
-export default function configureStore(preloadedState = initialState): any {
-  const middlewares = [thunk];
+const middlewares = [thunk];
 
-  const composeEnhancers = composeWithDevTools({
-    trace: true,
-    traceLimit: 25,
-  });
+const composeEnhancers = composeWithDevTools({
+  trace: true,
+  traceLimit: 25,
+});
 
-  const store = createStore(rootReducer, preloadedState, composeEnhancers(applyMiddleware(...middlewares)));
+const store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middlewares)));
 
-  return store;
-}
+export default store;

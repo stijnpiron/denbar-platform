@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
-import { useDispatch } from 'react-redux';
-
+import { Form, Input, Button, Alert } from 'antd';
+import AuthService from '../../../services/auth.service';
+import { RegisterData } from '../../../interfaces/register-data.interface';
+import { useDispatch, useSelector } from 'react-redux';
+import storeActions from '../../../store/store.actions';
+import { ObjectState } from '../../../interfaces/state/state.interface';
+import { AuthState } from '../../../interfaces/state/auth-state.interface';
+import { AppState } from '../../../interfaces/state/app-state.interface';
+import { ErrorSource } from '../../../interfaces/error.interface';
 interface FormData {
   name: { value: string; status: boolean };
   email: { value: string; status: boolean };
@@ -29,13 +35,31 @@ const formTailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
+const { registerUser, registerUserFailed, registerUserSuccess } = storeActions.auth.Actions;
+
 const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
+  const authState: ObjectState<AuthState> = useSelector((state: AppState) => state.auth);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [validForm, setValidForm] = useState<boolean>(true);
+  const dispatch = useDispatch();
+  const authService = new AuthService();
 
-  const { name, email } = formData;
+  const onFinish = async () => {
+    dispatch(registerUser());
+    try {
+      const registerData: RegisterData = { name: formData.name.value, email: formData.email.value, password: formData.password.value };
+      const res = await authService.register(registerData);
+      console.log(res);
 
-  const onFinish = () => {};
+      if (res._id) {
+        dispatch(registerUserSuccess(res));
+      } else {
+        dispatch(registerUserFailed(res));
+      }
+    } catch (err) {
+      dispatch(registerUserFailed(err));
+    }
+  };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -43,7 +67,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
 
   const fieldValidation = (fields: any[], data: any) => {
     //TODO: Check validation of form -> fields valid/invalid are edgy
-    console.log(data);
 
     if (fields.length > 0 && fields[0].name.length > 0) {
       setFormData({
@@ -61,7 +84,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
     <Form
       {...formLayout}
       name='registerForm'
-      initialValues={{ name: name.value, email: email.value }}
       validateTrigger=''
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -108,7 +130,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
       >
         <Input.Password />
       </Form.Item>
-
+      <Form.Item {...formTailLayout}>
+        {authState.error?.source === ErrorSource.REGISTER && (
+          <Alert message='Registration failed' description={authState.error.message} type='error' closable showIcon />
+        )}
+      </Form.Item>
       <Form.Item {...formTailLayout}>
         <Button type='primary' htmlType='submit' disabled={!validForm}>
           Register

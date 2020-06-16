@@ -5,10 +5,9 @@ import { AppWrapper } from './App.styles';
 import HeaderContainer from '../containers/Header/Header';
 import ContentContainer from '../containers/Content/Content';
 
-import configureStore from '../store/store';
 import { Provider } from 'react-redux';
 
-const store = configureStore();
+import store from '../store';
 
 const App: React.FC = () => {
   return (

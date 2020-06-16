@@ -1,7 +1,7 @@
 import { User } from '../user.interface';
 
-export interface AuthData {
-  token?: string;
+export interface AuthState {
+  cookie?: string;
   isAuthenticated?: boolean;
   user?: User;
 }
