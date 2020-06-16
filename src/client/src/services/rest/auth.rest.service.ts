@@ -1,6 +1,6 @@
-import { LoginData } from '../interfaces/login-data.interface';
-import { RegisterData } from '../interfaces/register-data.interface';
-import api from '../utils/api';
+import { LoginData } from '../../interfaces/login-data.interface';
+import { RegisterData } from '../../interfaces/register-data.interface';
+import api from '../../utils/api';
 
 export default class AuthService {
   private basePath = '/auth';

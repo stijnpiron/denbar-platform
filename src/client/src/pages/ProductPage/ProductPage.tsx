@@ -1,30 +1,18 @@
 import React, { useEffect } from 'react';
-import ProductRestService from '../../services/product.rest.service';
+import ProductService from '../../services/product.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { ProductsState } from '../../interfaces/state/products-state.interface';
 import { AppState } from '../../interfaces/state/app-state.interface';
-import storeActions from '../../store/store.actions';
 import { Product } from '../../interfaces/product.interface';
-import { Action } from '../../interfaces/state/action.interface';
-
-const { loadProducts, loadProductsFailed, loadProductsSuccess } = storeActions.products.Actions;
 
 const ProductPage: React.FC = () => {
   const { data } = useSelector((state: AppState) => state.products) || {};
   const { products, productQuantity }: ProductsState = data || {};
-  const productService = new ProductRestService();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadProducts());
-
-    const getProducts = async (): Promise<void | Action> => {
-      return await productService
-        .getProducts()
-        .then(productData => dispatch(loadProductsSuccess(productData.data)))
-        .catch(err => dispatch(loadProductsFailed()));
-    };
-    getProducts();
+    ProductService.getProducts(dispatch);
   }, [dispatch]);
 
   const renderProduct = (product: Product) => {
@@ -38,10 +26,12 @@ const ProductPage: React.FC = () => {
     );
   };
   return (
-    <div>
-      <pre>Products:{productQuantity}</pre>
-      <ul className='list'>{products?.length ? products.map(product => renderProduct(product)) : <p>No products loaded</p>}</ul>
-    </div>
+    <>
+      <div>
+        <pre>Products:{productQuantity}</pre>
+        <ul className='list'>{products?.length ? products.map(product => renderProduct(product)) : <p>No products loaded</p>}</ul>
+      </div>
+    </>
   );
 };
 
