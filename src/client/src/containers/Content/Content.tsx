@@ -17,7 +17,7 @@ const { checkAuth, checkAuthFailed, checkAuthSuccess } = storeActions.auth.Actio
 const ContentContainer: React.FC = () => {
   const dispatch = useDispatch();
 
-  const user: AuthState = useSelector((state: AppState) => state.auth).data || { isAuthenticated: false };
+  const { isAuthenticated }: AuthState = useSelector((state: AppState) => state.auth).data || { isAuthenticated: false };
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -42,7 +42,7 @@ const ContentContainer: React.FC = () => {
 
   return (
     <StyledContent>
-      {user.isAuthenticated ? (
+      {isAuthenticated ? (
         <Switch>
           <Redirect from='/' exact to='/overview' />
           <PrivateRoute exact path='/products' component={ProductPage} />
@@ -68,13 +68,13 @@ interface PrivateRouteProps extends RouteProps {
 
 const PrivateRoute: any = (props: PrivateRouteProps) => {
   const { children, ...rest } = props;
-  const user: AuthState = useSelector((state: AppState) => state.auth).data || { isAuthenticated: false };
+  const { isAuthenticated }: AuthState = useSelector((state: AppState) => state.auth).data || { isAuthenticated: false };
 
   return (
     <Route
       {...rest}
       render={(routeProps): any =>
-        user.isAuthenticated ? (
+        isAuthenticated ? (
           children
         ) : (
           <Redirect

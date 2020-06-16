@@ -29,11 +29,11 @@
     "coverage": "jest --coverage",
     "format": "prettier --write src/**/*.{js,ts,tsx}",
     "lf": "npm run format && npm run lint",
-    "lint:commit": "eslint src/**/*.{ts,tsx}",
     "lint": "eslint src/**/*.{ts,tsx} --fix",
     "start:first": "npm i && npm run start",
     "start": "react-scripts start",
-    "test": "npm run lf && react-scripts test"
+    "test": "npm run lf && react-scripts test",
+    "validate": "prettier src/**/*.{js,ts,tsx} && eslint src/**/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": "react-app"

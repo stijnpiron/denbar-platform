@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Alert } from 'antd';
-import AuthService from '../../../services/auth.service';
+import AuthService from '../../../services/rest/auth.rest.service';
 
 import { useDispatch, useSelector } from 'react-redux';
 import storeActions from '../../../store/store.actions';
