@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
+import AuthService from '../../../services/rest/auth.rest.service';
+
+import { useDispatch, useSelector } from 'react-redux';
+import storeActions from '../../../store/store.actions';
+import { LoginData } from '../../../interfaces/login-data.interface';
+import { AuthState } from '../../../interfaces/state/auth-state.interface';
+import { AppState } from '../../../interfaces/state/app-state.interface';
+import { ObjectState } from '../../../interfaces/state/state.interface';
+import { ErrorSource } from '../../../interfaces/error.interface';
 
 interface FormData {
   email: { value: string; status: boolean };
@@ -24,39 +33,52 @@ const formTailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
+const { loginUser, loginUserFailed, loginUserSuccess } = storeActions.auth.Actions;
+
 const LoginForm: React.FC<LoginFormProps> = ({ switchAuthType }) => {
+  const authState: ObjectState<AuthState> = useSelector((state: AppState) => state.auth);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [validForm, setValidForm] = useState<boolean>(true);
+  const dispatch = useDispatch();
+  const authService = new AuthService();
 
-  const { email } = formData;
+  const onFinish = async () => {
+    dispatch(loginUser());
+    try {
+      const loginData: LoginData = { email: formData.email.value, password: formData.password.value };
+      const res = await authService.login(loginData);
 
-  const onFinish = () => {};
+      if (res._id) {
+        dispatch(loginUserSuccess(res));
+      } else {
+        dispatch(loginUserFailed(res));
+      }
+    } catch (err) {
+      dispatch(loginUserFailed(err));
+    }
+  };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    console.warn('Failed:', errorInfo);
   };
 
   const fieldValidation = (fields: any[], data: any) => {
     //TODO: Check validation of form -> fields valid/invalid are edgy
-    console.log(data);
 
     if (fields.length > 0 && fields[0].name.length > 0) {
       setFormData({
         ...formData,
         [fields[0]?.name[0]]: { value: fields[0].value, status: !fields[0].errors.length },
       });
-      console.log(formData);
     }
     // setValidForm(Object.values(formData).filter((f: any) => !f.status).length === 0);
     setValidForm(true);
-    // console.log(formData);
   };
 
   return (
     <Form
       {...formLayout}
       name='loginForm'
-      initialValues={{ email: email.value }}
       validateTrigger=''
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -79,7 +101,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ switchAuthType }) => {
       <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please input your password!' }]}>
         <Input.Password />
       </Form.Item>
-
+      <Form.Item {...formTailLayout}>
+        {authState.error?.source === ErrorSource.LOGIN && <Alert message='Login failed' description={authState.error.message} type='error' closable showIcon />}
+      </Form.Item>
       <Form.Item {...formTailLayout}>
         <Button type='primary' htmlType='submit' disabled={!validForm}>
           Login

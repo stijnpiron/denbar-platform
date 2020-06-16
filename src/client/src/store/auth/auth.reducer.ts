@@ -1,14 +1,19 @@
-import { AuthData } from '../../interfaces/state/auth-data.interface';
+import { AuthState } from '../../interfaces/state/auth-state.interface';
 import { Action } from '../../interfaces/state/action.interface';
 import * as actions from './auth.actions';
-import { Error } from '../../interfaces/error.interface';
+import { Error, ErrorSource } from '../../interfaces/error.interface';
 import { ObjectState } from '../../interfaces/state/state.interface';
+import { User } from '../../interfaces/user.interface';
 
-export const initialState: ObjectState<AuthData> = {
-  data: { token: localStorage.getItem('token') || undefined },
+export const initialState: ObjectState<AuthState> = {
+  data: { cookie: localStorage.getItem('cookie') || undefined },
 };
 
 const {
+  AUTH_CHECK,
+  AUTH_CHECK_FAILED,
+  AUTH_CHECK_SUCCESS,
+  CLEAR_AUTH_ERRORS,
   USER_LOGIN,
   USER_LOGIN_FAILED,
   USER_LOGIN_SUCCESS,
@@ -21,15 +26,23 @@ const {
 } = actions;
 
 // TODO: check to split reducers
-const authReducer = (state: ObjectState<AuthData> = initialState, action: Action): ObjectState<AuthData> => {
+const authReducer = (state: ObjectState<AuthState> = initialState, action: Action): ObjectState<AuthState> => {
   const { type, payload } = action;
   switch (type) {
+    case AUTH_CHECK:
+      return checkAuth(state);
+    case AUTH_CHECK_FAILED:
+      return checkAuthFailed(state, payload as Error);
+    case AUTH_CHECK_SUCCESS:
+      return checkAuthSuccess(state, payload as User);
+    case CLEAR_AUTH_ERRORS:
+      return clearAuthErrors(state);
     case USER_LOGIN:
       return userLogin(state);
     case USER_LOGIN_FAILED:
       return userLoginFailed(state, payload as Error);
     case USER_LOGIN_SUCCESS:
-      return userLoginSuccess(state, payload as AuthData);
+      return userLoginSuccess(state, payload as User);
     case USER_LOGOUT:
       return userLogout(state);
     case USER_LOGOUT_FAILED:
@@ -47,36 +60,17 @@ const authReducer = (state: ObjectState<AuthData> = initialState, action: Action
   }
 };
 
-const userLogin = (state: ObjectState<AuthData>): ObjectState<AuthData> => ({
+const checkAuth = (state: ObjectState<AuthState>): ObjectState<AuthState> => ({
   ...state,
   loading: true,
   loaded: false,
   success: false,
   failed: false,
   data: {},
+  error: undefined,
 });
 
-const userLoginSuccess = (state: ObjectState<AuthData>, authData: AuthData): ObjectState<AuthData> => {
-  if (authData.token) {
-    localStorage.setItem('token', authData.token);
-  }
-
-  return {
-    ...state,
-    loading: false,
-    loaded: true,
-    success: true,
-    failed: false,
-    data: {
-      ...state.data,
-      token: authData.token,
-      isAuthenticated: true,
-      user: authData.user,
-    },
-  };
-};
-
-const userLoginFailed = (state: ObjectState<AuthData>, error: Error): ObjectState<AuthData> => ({
+const checkAuthFailed = (state: ObjectState<AuthState>, error: Error): ObjectState<AuthState> => ({
   ...state,
   loading: false,
   loaded: true,
@@ -85,12 +79,73 @@ const userLoginFailed = (state: ObjectState<AuthData>, error: Error): ObjectStat
   data: {
     ...state.data,
     user: undefined,
-    token: undefined,
   },
-  error,
+  error: { ...error, source: ErrorSource.AUTH },
 });
 
-const userLogout = (state: ObjectState<AuthData>): ObjectState<AuthData> => ({
+const checkAuthSuccess = (state: ObjectState<AuthState>, user: User): ObjectState<AuthState> => {
+  return {
+    ...state,
+    loading: false,
+    loaded: true,
+    success: true,
+    failed: false,
+    data: {
+      ...state.data,
+      isAuthenticated: true,
+      user,
+    },
+    error: undefined,
+  };
+};
+
+const clearAuthErrors = (state: ObjectState<AuthState>): ObjectState<AuthState> => {
+  return {
+    ...state,
+    error: undefined,
+  };
+};
+
+const userLogin = (state: ObjectState<AuthState>): ObjectState<AuthState> => ({
+  ...state,
+  loading: true,
+  loaded: false,
+  success: false,
+  failed: false,
+  data: {},
+  error: undefined,
+});
+
+const userLoginSuccess = (state: ObjectState<AuthState>, user: User): ObjectState<AuthState> => {
+  return {
+    ...state,
+    loading: false,
+    loaded: true,
+    success: true,
+    failed: false,
+    data: {
+      ...state.data,
+      isAuthenticated: true,
+      user,
+    },
+    error: undefined,
+  };
+};
+
+const userLoginFailed = (state: ObjectState<AuthState>, error: Error): ObjectState<AuthState> => ({
+  ...state,
+  loading: false,
+  loaded: true,
+  success: false,
+  failed: true,
+  data: {
+    ...state.data,
+    user: undefined,
+  },
+  error: { ...error, source: ErrorSource.LOGIN },
+});
+
+const userLogout = (state: ObjectState<AuthState>): ObjectState<AuthState> => ({
   ...state,
   loading: true,
   loaded: false,
@@ -99,9 +154,10 @@ const userLogout = (state: ObjectState<AuthData>): ObjectState<AuthData> => ({
   data: {
     ...state.data,
   },
+  error: undefined,
 });
 
-const userLogoutFailed = (state: ObjectState<AuthData>, error: Error): ObjectState<AuthData> => ({
+const userLogoutFailed = (state: ObjectState<AuthState>, error: Error): ObjectState<AuthState> => ({
   ...state,
   loading: false,
   loaded: true,
@@ -110,11 +166,12 @@ const userLogoutFailed = (state: ObjectState<AuthData>, error: Error): ObjectSta
   data: {
     ...state.data,
   },
-  error,
+  error: { ...error, source: ErrorSource.LOGOUT },
 });
 
-const userLogoutSuccess = (state: ObjectState<AuthData>): ObjectState<AuthData> => {
-  localStorage.removeItem('token');
+const userLogoutSuccess = (state: ObjectState<AuthState>): ObjectState<AuthState> => {
+  localStorage.removeItem('cookie');
+
   return {
     ...state,
     loading: false,
@@ -122,20 +179,22 @@ const userLogoutSuccess = (state: ObjectState<AuthData>): ObjectState<AuthData> 
     success: true,
     failed: false,
     data: {},
+    error: undefined,
   };
 };
 
-const userRegister = (state: ObjectState<AuthData>): ObjectState<AuthData> => ({
+const userRegister = (state: ObjectState<AuthState>): ObjectState<AuthState> => ({
   ...state,
   loading: true,
   loaded: false,
   success: false,
   failed: false,
   data: {},
+  error: undefined,
 });
 
-const userRegisterFailed = (state: ObjectState<AuthData>, error: Error): ObjectState<AuthData> => {
-  localStorage.removeItem('token');
+const userRegisterFailed = (state: ObjectState<AuthState>, error: Error): ObjectState<AuthState> => {
+  localStorage.removeItem('cookie');
   return {
     ...state,
     loading: false,
@@ -143,13 +202,14 @@ const userRegisterFailed = (state: ObjectState<AuthData>, error: Error): ObjectS
     success: false,
     failed: true,
     data: {},
-    error,
+    error: { ...error, source: ErrorSource.REGISTER },
   };
 };
 
-const userRegisterSuccess = (state: ObjectState<AuthData>, authData: AuthData): ObjectState<AuthData> => {
-  if (authData.token) {
-    localStorage.setItem('token', authData.token);
+const userRegisterSuccess = (state: ObjectState<AuthState>, authState: AuthState): ObjectState<AuthState> => {
+  const { cookie } = authState;
+  if (cookie) {
+    localStorage.setItem('cookie', cookie);
   }
 
   return {
@@ -161,9 +221,9 @@ const userRegisterSuccess = (state: ObjectState<AuthData>, authData: AuthData): 
     data: {
       ...state.data,
       isAuthenticated: true,
-      user: authData.user,
-      token: authData.token,
+      user: authState.user,
     },
+    error: undefined,
   };
 };
 

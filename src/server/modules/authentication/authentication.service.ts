@@ -22,6 +22,15 @@ import { DataStoredInToken } from '../../common/interfaces/data-stored-in-token.
 export class AuthenticationService {
   private user = UserModel;
 
+  public authenticate = async (userId: string): Promise<any> => {
+    try {
+      return await this.user.findById(userId).select('-password');
+    } catch (err) {
+      console.error(err.message);
+      throw new SendExceptionWithPayload(INTERNAL_SERVER_ERROR, 'error checking authentication', err.message);
+    }
+  };
+
   public register = async (userData: UserOptional): Promise<Register> => {
     if (await this.user.findOne({ email: userData.email })) throw new UserWithThatEmailAlreadyExistsException(userData.email);
 
@@ -127,7 +136,7 @@ export class AuthenticationService {
   }
 
   public createCookie(tokenData: TokenData = { token: '', expiresIn: 0 }): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
+    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}; Path=/api`;
   }
 
   public getRoleForUser = async (userId: string): Promise<string> => {

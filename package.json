@@ -20,7 +20,7 @@
     "start": "npm run serve",
     "test:client": "npm t --prefix src/client",
     "test:server": "env TESTRUN=testrun ts-mocha",
-    "test": "npm run test:server && npm run test:client",
+    "test": "npm run test:server",
     "tsc": "tsc",
     "validate": " npm i && npm run rem-dist && npm run format && npm run lint && npm run test && npm run rem-dist"
   },
@@ -43,12 +43,14 @@
     "node": "14.x"
   },
   "dependencies": {
+    "@types/cors": "^2.8.6",
     "accesscontrol": "^2.2.1",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "express": "^4.17.1",

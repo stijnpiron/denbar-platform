@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
-import { AuthenticationService } from '../../services/authentication.service';
-import ProductRestService from '../../services/rest/product.rest.service';
+import React, { useEffect } from 'react';
+import ProductService from '../../services/product.service';
+import { useSelector, useDispatch } from 'react-redux';
+import { ProductsState } from '../../interfaces/state/products-state.interface';
+import { AppState } from '../../interfaces/state/app-state.interface';
+import { Product } from '../../interfaces/product.interface';
 
 const ProductPage: React.FC = () => {
-  const productService = new ProductRestService();
+  const { data } = useSelector((state: AppState) => state.products) || {};
+  const { products, productQuantity }: ProductsState = data || {};
 
-  const products = async () => await productService.getProducts();
+  const dispatch = useDispatch();
 
-  const renderProduct = (product: any) => {
+  useEffect(() => {
+    ProductService.getProducts(dispatch);
+  }, [dispatch]);
+
+  const renderProduct = (product: Product) => {
     return (
       <li key={product._id} className='list__item product'>
         <h3 className='product__name'>{product.name}</h3>
-        <p className='product__description'>{product.description}</p>
+        <p className='product__description'>
+          {product.category}({product.packing.quantity}-{product.packing.size})
+        </p>
       </li>
     );
   };
-
   return (
-    <div>
-      <ul className='list'>{products && products.length > 0 ? <pre>{products}</pre> : <p>No products found</p>}</ul>
-    </div>
+    <>
+      <div>
+        <pre>Products:{productQuantity}</pre>
+        <ul className='list'>{products?.length ? products.map(product => renderProduct(product)) : <p>No products loaded</p>}</ul>
+      </div>
+    </>
   );
 };
 
