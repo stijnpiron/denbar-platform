@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ProductsState } from '../../interfaces/state/products-state.interface';
 import { AppState } from '../../interfaces/state/app-state.interface';
 import storeActions from '../../store/store.actions';
-import { ObjectState } from '../../interfaces/state/state.interface';
 import { Product } from '../../interfaces/product.interface';
+import { Action } from '../../interfaces/state/action.interface';
 
 const { loadProducts, loadProductsFailed, loadProductsSuccess } = storeActions.products.Actions;
 
@@ -15,20 +15,17 @@ const ProductPage: React.FC = () => {
   const productService = new ProductRestService();
   const dispatch = useDispatch();
 
-  const getProducts = async () => {
-    dispatch(loadProducts());
-    const productData: ProductsState = (await productService.getProducts()).data;
-
-    if (productData.products) {
-      dispatch(loadProductsSuccess(productData));
-    } else {
-      dispatch(loadProductsFailed());
-    }
-  };
-
   useEffect(() => {
+    dispatch(loadProducts());
+
+    const getProducts = async (): Promise<void | Action> => {
+      return await productService
+        .getProducts()
+        .then(productData => dispatch(loadProductsSuccess(productData.data)))
+        .catch(err => dispatch(loadProductsFailed()));
+    };
     getProducts();
-  }, []);
+  }, [dispatch]);
 
   const renderProduct = (product: Product) => {
     return (
@@ -40,7 +37,6 @@ const ProductPage: React.FC = () => {
       </li>
     );
   };
-
   return (
     <div>
       <pre>Products:{productQuantity}</pre>
