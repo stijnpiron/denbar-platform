@@ -10,34 +10,39 @@ import { AppState } from '../../interfaces/state/app-state.interface';
 import { AuthState } from '../../interfaces/state/auth-state.interface';
 import storeActions from '../../store/store.actions';
 import api from '../../utils/api';
+import { Action } from '../../interfaces/state/action.interface';
 
 const { checkAuth, checkAuthFailed, checkAuthSuccess } = storeActions.auth.Actions;
 
 const ContentContainer: React.FC = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    checkAuthentication();
-  }, []);
-
-  const checkAuthentication = async () => {
-    dispatch(checkAuth());
-    try {
-      const res = await api.get('/auth/check');
-      if (res.data?._id) {
-        dispatch(checkAuthSuccess(res.data));
-      }
-      dispatch(checkAuthFailed({ code: 401, type: 'Unauthorized', message: 'Wrong or no authentication token provided' }));
-    } catch (err) {
-      dispatch(checkAuthFailed(err));
-    }
-  };
-
   const user: AuthState = useSelector((state: AppState) => state.auth).data || { isAuthenticated: false };
+
+  useEffect(() => {
+    dispatch(checkAuth());
+
+    const checkAuthentication = async (): Promise<void | Action> => {
+      try {
+        return await api
+          .get('/auth/check')
+          .then(res =>
+            res.data._id
+              ? dispatch(checkAuthSuccess(res.data))
+              : dispatch(checkAuthFailed({ code: 401, type: 'Unauthorized', message: 'Wrong or no authentication token provided' }))
+          )
+          .catch(err => console.log(err));
+      } catch (err) {
+        dispatch(checkAuthFailed(err));
+      }
+    };
+
+    checkAuthentication();
+  }, [dispatch]);
 
   return (
     <StyledContent>
-      {checkAuthentication && user.isAuthenticated ? (
+      {user.isAuthenticated ? (
         <Switch>
           <Redirect from='/' exact to='/overview' />
           <PrivateRoute exact path='/products' component={ProductPage} />

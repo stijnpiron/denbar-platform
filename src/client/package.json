@@ -27,10 +27,10 @@
   "scripts": {
     "build": "npm run lf && react-scripts build",
     "coverage": "jest --coverage",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx}'",
+    "format": "prettier --write src/**/*.{js,ts,tsx}",
     "lf": "npm run format && npm run lint",
-    "lint:commit": "eslint 'src/**/*.{ts,tsx}'",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "lint:commit": "eslint src/**/*.{ts,tsx}",
+    "lint": "eslint src/**/*.{ts,tsx} --fix",
     "start:first": "npm i && npm run start",
     "start": "react-scripts start",
     "test": "npm run lf && react-scripts test"
