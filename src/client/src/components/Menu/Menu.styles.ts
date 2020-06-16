@@ -14,6 +14,7 @@ export const MenuList = styled.ul<{ open: boolean }>`
   list-style: none;
   overflow: hidden;
   background-color: #fff;
+  width: 100%;
   max-height: ${({ open }): string => (open ? '240px' : '0')};
   -webkit-box-shadow: ${({ open }): string => (open ? bottomBoxShadow : 'none')};
   -moz-box-shadow: ${({ open }): string => (open ? bottomBoxShadow : 'none')};

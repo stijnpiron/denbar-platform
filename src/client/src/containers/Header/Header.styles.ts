@@ -9,6 +9,7 @@ export const StyledHeader = styled(Layout.Header)<{ open: boolean }>`
   -moz-box-shadow: ${({ open }): string => (open ? 'none' : borders.bottomBoxShadow)};
   box-shadow: ${({ open }): string => (open ? 'none' : borders.bottomBoxShadow)};
   position: fixed;
+  padding: 0;
   width: 100%;
   z-index: 13;
 `;
