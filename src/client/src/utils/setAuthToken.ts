@@ -8,7 +8,6 @@ const { checkAuthFailed, checkAuthSuccess } = storeActions.auth.Actions;
 const setAuthToken = async (dispatch: Dispatch<any>): Promise<void> => {
   try {
     const res = await api.get('/auth/check');
-    debugger;
     if (res.data?._id) {
       dispatch(checkAuthSuccess(res.data as User));
     }

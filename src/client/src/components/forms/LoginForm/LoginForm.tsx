@@ -59,7 +59,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ switchAuthType }) => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    console.warn('Failed:', errorInfo);
   };
 
   const fieldValidation = (fields: any[], data: any) => {

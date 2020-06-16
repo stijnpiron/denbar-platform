@@ -19,7 +19,6 @@ const ProductPage: React.FC = () => {
     dispatch(loadProducts());
     const productData: ProductsState = (await productService.getProducts()).data;
 
-    debugger;
     if (productData.products) {
       dispatch(loadProductsSuccess(productData));
     } else {
