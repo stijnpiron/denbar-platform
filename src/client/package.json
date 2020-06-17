@@ -19,7 +19,7 @@
     "@types/uuid": "^7.0.0",
     "antd": "^4.0.2",
     "axios": "^0.19.2",
-    "cra-template": "1.0.2",
+    "cra-template": "1.0.3",
     "directory-named-webpack-plugin": "^4.0.1",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
