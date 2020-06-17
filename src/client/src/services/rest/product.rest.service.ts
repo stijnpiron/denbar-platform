@@ -7,7 +7,7 @@ export enum ProductRestActions {
 
 const basePath = '/products';
 
-const getProducts = () => api.get<{ data: ProductsState }>(`${basePath}`).then(res => res.data);
+const getProducts = () => api.get<{ data: ProductsState }>(`${basePath}`).then((res) => res.data);
 
 const ProductRestService = (options: { action: string; path?: string }): any => {
   const { action, path } = options;

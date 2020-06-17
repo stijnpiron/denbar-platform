@@ -13,12 +13,12 @@ const basePath = '/auth';
 
 const authenticate = () => api.get(`${basePath}/authenticate`);
 
-const login = (data: LoginData) => api.post(`${basePath}/login`, data).then(res => res.data);
+const login = (data: LoginData) => api.post(`${basePath}/login`, data).then((res) => res.data);
 
-const logout = () => api.post(`${basePath}/logout`).then(res => res.data);
+const logout = () => api.post(`${basePath}/logout`).then((res) => res.data);
 
 const register = (data: RegisterData) =>
-  api.post(`${basePath}/register`, data).then(res => {
+  api.post(`${basePath}/register`, data).then((res) => {
     return res.data;
   });
 
