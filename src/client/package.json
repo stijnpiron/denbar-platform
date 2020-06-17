@@ -87,7 +87,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "redux": "^4.0.5",
-    "source-map-loader": "^0.2.4",
+    "source-map-loader": "^1.0.0",
     "ts-jest": "^24.3.0",
     "typescript": "^3.8.3"
   }
