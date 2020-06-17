@@ -7,6 +7,4 @@ const { contentBackground, text } = color.types;
 export const AppWrapper = styled(Layout)`
   background: ${contentBackground};
   color: ${text};
-  display: flex;
-  flex-flow: column nowrap;
 `;

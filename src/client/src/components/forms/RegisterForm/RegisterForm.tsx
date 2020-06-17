@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Alert } from 'antd';
-import AuthService from '../../../services/rest/auth.rest.service';
+import AuthService from '../../../services/auth.service';
 import { RegisterData } from '../../../interfaces/register-data.interface';
 import { useDispatch, useSelector } from 'react-redux';
 import storeActions from '../../../store/store.actions';
@@ -42,19 +42,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ switchAuthType }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [validForm, setValidForm] = useState<boolean>(true);
   const dispatch = useDispatch();
-  const authService = new AuthService();
 
   const onFinish = async () => {
     dispatch(registerUser());
     try {
       const registerData: RegisterData = { name: formData.name.value, email: formData.email.value, password: formData.password.value };
-      const res = await authService.register(registerData);
-
-      if (res._id) {
-        dispatch(registerUserSuccess(res));
-      } else {
-        dispatch(registerUserFailed(res));
-      }
+      return await AuthService.register(registerData, dispatch);
     } catch (err) {
       dispatch(registerUserFailed(err));
     }
