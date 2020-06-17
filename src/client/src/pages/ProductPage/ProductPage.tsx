@@ -29,7 +29,7 @@ const ProductPage: React.FC = () => {
     <>
       <div>
         <pre>Products:{productQuantity}</pre>
-        <ul className='list'>{products?.length ? products.map(product => renderProduct(product)) : <p>No products loaded</p>}</ul>
+        <ul className='list'>{products?.length ? products.map((product) => renderProduct(product)) : <p>No products loaded</p>}</ul>
       </div>
     </>
   );

@@ -26,12 +26,12 @@ const ContentContainer: React.FC = () => {
       try {
         return await api
           .get('/auth/check')
-          .then(res =>
+          .then((res) =>
             res.data._id
               ? dispatch(checkAuthSuccess(res.data))
               : dispatch(checkAuthFailed({ code: 401, type: 'Unauthorized', message: 'Wrong or no authentication token provided' }))
           )
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       } catch (err) {
         dispatch(checkAuthFailed(err));
       }
