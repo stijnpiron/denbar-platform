@@ -1,7 +1,8 @@
+import { UserOptional } from './../user/interfaces/user.interface';
 import { PermissionResource } from './../../common/middlewares/permission/enums/permission-resource.enum';
 import { grantAccess } from './../../common/middlewares/permission/permission.middleware';
 import express from 'express';
-import { OK } from 'http-status-codes';
+import { OK, UNAUTHORIZED } from 'http-status-codes';
 import { AuthenticationService } from './authentication.service';
 import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
 import { LoginDto } from './dtos/login.dto';
@@ -13,7 +14,7 @@ import { RequestWithUser } from '../../common/interfaces/request-with-user.inter
 import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
 import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
 
-const { TFA, AUHTENTICATION } = PermissionActions;
+const { CHECK_AUTH, TFA, AUHTENTICATION } = PermissionActions;
 const { AUTH } = PermissionResource;
 
 export class AuthenticationController extends Controller {
@@ -28,6 +29,8 @@ export class AuthenticationController extends Controller {
   }
 
   private initializeRoutes(): void {
+    this.router.get(`${this.path}/check`, grantAccess({ action: CHECK_AUTH, resource: AUTH }), this.checkAuthentication);
+
     this.router.post(`${this.path}/register`, validationMiddleware(UserCreateRequestDto), grantAccess({ action: AUHTENTICATION }), this.registration);
 
     this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), grantAccess({ action: AUHTENTICATION }), this.loggingIn);
@@ -51,8 +54,21 @@ export class AuthenticationController extends Controller {
       );
   }
 
+  private checkAuthentication = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
+    const userId = req.user._id;
+
+    try {
+      const user = await this.authenticationService.authenticate(userId);
+
+      if (user._id) res.status(OK).send(user);
+      else res.status(UNAUTHORIZED).send();
+    } catch (err) {
+      next(err);
+    }
+  };
+
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
-    const userData: UserCreateRequestDto = req.body;
+    const userData: UserOptional = req.body;
 
     try {
       const { cookie, user } = await this.authenticationService.register(userData);
