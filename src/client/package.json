@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/compatible": "1.0.1",
+    "@ant-design/compatible": "1.0.2",
     "@ant-design/icons": "^4.0.2",
     "@reduxjs/toolkit": "^1.2.5",
     "@types/lodash": "^4.14.149",
