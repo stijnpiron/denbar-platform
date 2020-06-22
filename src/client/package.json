@@ -54,7 +54,7 @@
     "@types/react": "^16.9.37",
     "@types/styled-components": "^5.1.0",
     "@types/uuid": "^8.0.0",
-    "antd": "^4.3.4",
+    "antd": "^4.3.5",
     "axios": "^0.19.2",
     "cra-template": "1.0.3",
     "directory-named-webpack-plugin": "^4.0.1",
