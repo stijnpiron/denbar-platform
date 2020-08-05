@@ -1,43 +1,74 @@
+import { UserOptional } from './../user/interfaces/user.interface';
+import { PermissionResource } from './../../common/middlewares/permission/enums/permission-resource.enum';
+import { grantAccess } from './../../common/middlewares/permission/permission.middleware';
 import express from 'express';
-import { OK } from 'http-status-codes';
-import AuthenticationService from './authentication.service';
-import authMiddleware from '../../common/middlewares/auth.middleware';
-import Controller from '../../common/interfaces/controller.interface';
-import CreateUserDto from './dtos/create-user.dto';
-import LoginDto from './dtos/login.dto';
-import RequestWithUser from '../../common/interfaces/request-with-user.interface';
-import TwoFactorAuthenticationDto from './dtos/two-factor-authentication.dto';
-import userModel from '../user/models/user.model';
-import validationMiddleware from '../../common/middlewares/validation.middleware';
-import WrongTwoFactorAuthenticationCodeException from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
+import { OK, UNAUTHORIZED } from 'http-status-codes';
+import { AuthenticationService } from './authentication.service';
+import { UserCreateRequestDto } from '../../modules/user/dtos/requests/user-create.request.dto';
+import { LoginDto } from './dtos/login.dto';
+import { TwoFactorAuthenticationDto } from './dtos/two-factor-authentication.dto';
+import { UserModel } from '../../modules/user/models/user.model';
+import { Controller } from '../../common/interfaces/controller.interface';
+import { validationMiddleware } from '../../common/middlewares/validation.middleware';
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
+import { WrongTwoFactorAuthenticationCodeException } from '../../common/exceptions/wrong-two-factor-authentication-code.exception';
+import { PermissionActions } from '../../common/middlewares/permission/enums/permission-actions.enum';
 
-class AuthenticationController implements Controller {
+const { CHECK_AUTH, TFA, AUHTENTICATION } = PermissionActions;
+const { AUTH } = PermissionResource;
+
+export class AuthenticationController extends Controller {
   public path = '/auth';
   public router = express.Router();
   private authenticationService = new AuthenticationService();
-  private user = userModel;
+  private user = UserModel;
 
   constructor() {
+    super();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    this.router.post(`${this.path}/register`, validationMiddleware(CreateUserDto), this.registration);
+    this.router.get(`${this.path}/check`, grantAccess({ action: CHECK_AUTH, resource: AUTH }), this.checkAuthentication);
 
-    this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), this.loggingIn);
-    this.router.post(`${this.path}/logout`, this.loggingOut);
+    this.router.post(`${this.path}/register`, validationMiddleware(UserCreateRequestDto), grantAccess({ action: AUHTENTICATION }), this.registration);
 
-    this.router.post(`${this.path}/2fa/authenticate`, validationMiddleware(TwoFactorAuthenticationDto), authMiddleware(true), this.secondFactorAuthentication);
+    this.router.post(`${this.path}/login`, validationMiddleware(LoginDto), grantAccess({ action: AUHTENTICATION }), this.loggingIn);
+    this.router.post(`${this.path}/logout`, grantAccess({ action: AUHTENTICATION }), this.loggingOut);
+
+    this.router.post(
+      `${this.path}/2fa/authenticate`,
+      validationMiddleware(TwoFactorAuthenticationDto),
+      grantAccess({ action: TFA, resource: AUTH, omitSecondFactor: true }),
+      this.secondFactorAuthentication
+    );
 
     this.router
-      .all(`${this.path}/*`, authMiddleware())
-      .get(`${this.path}`, authMiddleware(), this.auth)
-      .post(`${this.path}/2fa/generate`, this.generateTwoFactorAuthenticationCode)
-      .post(`${this.path}/2fa/toggle`, validationMiddleware(TwoFactorAuthenticationDto), this.toggleTwoFactorAuthentication);
+      .get(`${this.path}`, this.auth)
+      .post(`${this.path}/2fa/generate`, grantAccess({ action: TFA, resource: AUTH }), this.generateTwoFactorAuthenticationCode)
+      .post(
+        `${this.path}/2fa/toggle`,
+        validationMiddleware(TwoFactorAuthenticationDto),
+        grantAccess({ action: TFA, resource: AUTH }),
+        this.toggleTwoFactorAuthentication
+      );
   }
 
+  private checkAuthentication = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
+    const userId = req.user._id;
+
+    try {
+      const user = await this.authenticationService.authenticate(userId);
+
+      if (user._id) res.status(OK).send(user);
+      else res.status(UNAUTHORIZED).send();
+    } catch (err) {
+      next(err);
+    }
+  };
+
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
-    const userData: CreateUserDto = req.body;
+    const userData: UserOptional = req.body;
 
     try {
       const { cookie, user } = await this.authenticationService.register(userData);
@@ -62,7 +93,7 @@ class AuthenticationController implements Controller {
     }
   };
 
-  private loggingOut = async (_: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  private loggingOut = async (_req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
     try {
       const { cookie } = await this.authenticationService.logout();
       res.setHeader('Set-Cookie', cookie);
@@ -72,15 +103,19 @@ class AuthenticationController implements Controller {
     }
   };
 
-  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response): Promise<void> => {
+  private generateTwoFactorAuthenticationCode = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
     const { user } = req;
 
-    const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
+    try {
+      const { otpauthUrl, base32 } = this.authenticationService.getTwoFactorAuthenticationCode();
 
-    await this.user.findByIdAndUpdate(user._id, {
-      twoFactorAuthenticationCode: base32,
-    });
-    this.authenticationService.respondWithQRCode(otpauthUrl, res);
+      await this.user.findByIdAndUpdate(user._id, {
+        twoFactorAuthenticationCode: base32,
+      });
+      this.authenticationService.respondWithQRCode(otpauthUrl, res);
+    } catch (err) {
+      next(err);
+    }
   };
 
   private toggleTwoFactorAuthentication = async (req: RequestWithUser, res: express.Response, next: express.NextFunction): Promise<void> => {
@@ -120,5 +155,3 @@ class AuthenticationController implements Controller {
     });
   };
 }
-
-export default AuthenticationController;

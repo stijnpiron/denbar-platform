@@ -1,6 +1,6 @@
 import { cleanEnv, num, port, str } from 'envalid';
 
-function validateEnv(): any {
+export function validateEnv(): any {
   cleanEnv(process.env, {
     JWT_SECRET: str(),
     JWT_TTL: num(),
@@ -13,5 +13,3 @@ function validateEnv(): any {
     TWO_FACTOR_AUTHENTICATION_APP_NAME: str(),
   });
 }
-
-export default validateEnv;

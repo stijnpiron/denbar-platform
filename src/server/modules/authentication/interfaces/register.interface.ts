@@ -1,6 +1,6 @@
-import User from '../../user/interfaces/user.interface';
+import { User } from '../../user/interfaces/user.interface';
 
-export default interface Register {
+export interface Register {
   cookie: string;
   user: User;
 }

@@ -1,6 +1,6 @@
-import User from '../../user/interfaces/user.interface';
+import { User } from '../../user/interfaces/user.interface';
 
-export default interface SecondFactorAuthentication {
+export interface SecondFactorAuthentication {
   cookie: string;
   result: User;
 }
